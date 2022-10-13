@@ -1,0 +1,66 @@
+% Environments
+\newenvironment{codealign}{\footnotesize\csname align*\endcsname}{\csname endalign*\endcsname}
+
+% Colors
+\definecolor{colpol}{rgb}{0.6,0.6,0.7}
+\definecolor{colprd}{rgb}{0.5,0.0,0.5}
+\definecolor{colcon}{rgb}{0.0,0.5,0.5}
+\definecolor{meta}{rgb}{0.2,0.2,0.2}
+
+\newcommand{\colpol}[1]{\ensuremath{\textcolor{colpol}{#1}}}
+\newcommand{\colprd}[1]{\ensuremath{\textcolor{colprd}{#1}}}
+\newcommand{\colcon}[1]{\ensuremath{\textcolor{colcon}{#1}}}
+\newcommand{\colmeta}[1]{\ensuremath{\textcolor{meta}{#1}}}
+
+% Formalization-Commands
+\newcommand{\codata}{\ensuremath{\mathbf{codata}}}
+\newcommand{\where}{\ensuremath{\mathbf{where}}}
+\newcommand{\define}{\ensuremath{\mathbf{def}}}
+\newcommand{\match}{\ensuremath{\mathbf{match}}}
+\newcommand{\Done}{\ensuremath{\mathbf{Done}}}
+
+\newcommand*{\flip}[1]{\hat{#1}}
+
+\newcommand{\wrap}[2][]{\,\overset{\textit{\tiny#2}}{\colon}#1\,}
+\newcommand{\prd}{
+  \wrap{\raisebox{0pt}{\colprd{\rule{0pt}{3pt}\smash{\mathfrak{l}}}}}
+}
+\newcommand{\prdcon}{
+  \wrap{\raisebox{0pt}{\ensuremath{\rule{0pt}{3pt}\smash{\colpol{o}}}}}
+}
+%\newcommand{\conprd}{
+%  \wrap{\raisebox{0pt}{\ensuremath{\rule{0pt}{3pt}\smash{\flip{\colpol{o}}}}}}
+%}
+\newcommand{\con}{
+  \wrap{\rule{0pt}{1pt}\colcon{\mathfrak{r}}}
+}
+
+\newcommand{\pol}{\colpol{o}}
+\newcommand{\polprd}{\colprd{\mathfrak{l}}}
+\newcommand{\polcon}{\colcon{\mathfrak{r}}}
+
+\newcommand{\mkCmd}{\mathrel{\gg}}
+
+\newcommand{\cmd}{\ensuremath{\mathsf{cmd}}}
+
+
+\newcommand{\typetm}[4]{
+  \ensuremath{#1\ \colmeta{|}\ #2\ \colmeta{\vdash}\ #3\ \colmeta{\prdcon}\ #4}
+}
+\newcommand{\typecmd}[4]{
+  \ensuremath{#1\ \colmeta{\vdash}\ #3\ \colmeta{:}\ #4\ \colmeta{\dashv}\ #2}
+}
+\newcommand{\typewf}[1]{
+  \ensuremath{\colmeta{\vdash}\ #1\ \colmeta{\text{Ok}}}
+}
+
+\newcommand{\muconabs}[3]{\ensuremath{\mu(#1 \prd #2).#3}}
+\newcommand{\muqabs}[3]{\ensuremath{\mu(#1 \overset{o}{:} #2).#3}}
+
+% Programming-Commands
+\newcommand{\FunXY}{\colcon{\textsc{Fun}}XY}
+\newcommand{\Apply}{\colcon{\text{Apply}}}
+\newcommand{\id}{\colprd{\text{id}}}
+
+\newcommand{\RecordX}{\colcon{\textsc{Record}X}}
+\newcommand{\Get}{\colcon{\text{Get}}}

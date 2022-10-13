@@ -1,0 +1,90 @@
+f(x: A) -> (A - > A) = return \y: A.x+y
+
+g(F: A -> A) -> A = return F(a)
+
+main(x) = g(f(x))
+-------------------------------------------
+compile-thorin
+-------------------------------------------
+f(f_x: A, f_ret: fn(fn(A, fn(A))):
+  f_ret(f_clos)
+
+f_clos(y: A, f_clos_ret: fn(A)):
+  f_clos_ret(f_x + y)
+
+g(g_F: fn(A, fn(A)), g_ret: fn(A)):
+  g_F(a, g_ret)
+
+main(main_x: A):
+  f(main_x, main_g)
+
+main_g(F: fn(A, fn(A)):
+  g(F, DONE)
+-------------------------------------------
+drop(f_ret |-> main_g)
+-------------------------------------------
+f(f_x: A):
+  main_g(f_clos)
+
+f_clos(y: A, f_clos_ret: fn(A)):
+  f_clos_ret(f_x + y)
+
+g(g_F: fn(A, fn(A)), g_ret: fn(A)):
+  g_F(a, g_ret)
+
+main(main_x: A):
+  f(main_x)
+
+main_g(F: fn(A, fn(A)):
+  g(F, DONE)
+-------------------------------------------
+drop(g_F |-> F, g_ret |-> DONE)
+-------------------------------------------
+f(f_x: A):
+  main_g(f_clos)
+
+f_clos(y: A, f_clos_ret: fn(A)):
+  f_clos_ret(f_x + y)
+
+g():
+  F(a, DONE)
+
+main(main_x: A):
+  f(main_x)
+
+main_g(F: fn(A, fn(A)):
+  g()
+-------------------------------------------
+drop(F |-> f_clos)
+-------------------------------------------
+f(f_x: A):
+  main_g()
+
+f_clos(y: A, f_clos_ret: fn(A)):
+  f_clos_ret(f_x + y)
+
+g():
+  f_clos(a, DONE)
+
+main(main_x: A)
+  f(main_x)
+
+main_g():
+  g()
+-------------------------------------------
+drop(f_clos_ret |-> DONE)
+-------------------------------------------
+f(f_x: A):
+  main_g()
+
+f_clos(y: A):
+  DONE(f_x + y)
+
+g():
+  f_clos(a)
+
+main(main_x: A):
+ f(main_x)
+
+main_g():
+  g()

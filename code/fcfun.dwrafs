@@ -1,0 +1,114 @@
+f(x: A) -> (A - > A) = return \y: A.x+y
+
+g(F: A -> A) -> A = return F(a)
+
+main(x) = g(f(x))
+-------------------------------------------
+compile-dwarfs
+-------------------------------------------
+codata FunX:
+  apply'(:prd: X) :con: FunX
+
+codata FunXY:
+  apply(:prd: X, :con: Y) :con: FunXY
+
+comatch f :prd: FunA(FunAA):
+  apply(f_x, f_ret) => f_clos >> f_ret
+
+comatch f_clos :prd: FunAA:
+  apply(y, f_clos_ret) => (f_x + y) >> f_clos_ret
+
+comatch g :prd: Fun(FunAA)A:
+  apply(g_F, g_ret): => g_F >> apply(a, g_ret)
+
+comatch main :prd: FunA:
+  apply'(main_x) => f >> apply(main_x, mu(F :prd: FunAA).g >> apply(F, DONE))
+-------------------------------------------
+drop(f_ret |-> mu...)
+-------------------------------------------
+codata FunX:
+  apply'(:prd: X) :con: FunX
+
+codata FunXY:
+  apply(:prd: X, :con: Y) :con: FunXY
+
+comatch f :prd: FunA:
+  apply'(f_x) => f_clos >> mu(F :prd: FunAA).g >> apply(F, DONE)
+
+comatch f_clos :prd: FunAA:
+  apply(y, f_clos_ret) => (f_x + y) >> f_clos_ret
+
+comatch g :prd: Fun(FunAA)A:
+  apply(g_F, g_ret): => g_F >> apply(a, g_ret)
+
+comatch main :prd: FunA:
+  apply'(main_x) => f >> apply'(main_x)
+-------------------------------------------
+drop(g_F |-> F, g_ret |-> DONE)
+-------------------------------------------
+codata Fun:
+  apply'' :con: Fun
+
+codata FunX:
+  apply'(:prd: X) :con: FunX
+
+codata FunXY:
+  apply(:prd: X, :con: Y) :con: FunXY
+
+comatch f :prd: FunA:
+  apply'(f_x) => f_clos >> mu(F :prd: FunAA).g >> apply''
+
+comatch f_clos :prd: FunAA:
+  apply(y, f_clos_ret) => (f_x + y) >> f_clos_ret
+
+comatch g :prd: Fun:
+  apply'': => F >> apply(a, DONE)
+
+comatch main :prd: FunA:
+  apply'(main_x) => f >> apply'(main_x)
+-------------------------------------------
+drop(F |-> f_clos)
+-------------------------------------------
+codata Fun:
+  apply'' :con: Fun
+
+codata FunX:
+  apply'(:prd: X) :con: FunX
+
+codata FunXY:
+  apply(:prd: X, :con: Y) :con: FunXY
+
+comatch f :prd: FunA:
+  apply'(f_x) => g >> apply''
+
+comatch f_clos :prd: FunAA:
+  apply(y, f_clos_ret) => (f_x + y) >> f_clos_ret
+
+comatch g :prd: Fun:
+  apply'': => f_clos >> apply(a, DONE)
+
+comatch main :prd: FunA:
+  apply'(main_x) => f >> apply'(main_x)
+-------------------------------------------
+drop(f_clos_ret |-> DONE)
+-------------------------------------------
+codata Fun:
+  apply'' :con: Fun
+
+codata FunX:
+  apply'(:prd: X) :con: FunX
+
+codata FunXY:
+  apply(:prd: X, :con: Y) :con: FunXY
+
+comatch f :prd: FunA:
+  apply'(f_x) => g >> apply''
+
+comatch f_clos :prd: FunA:
+  apply'(y) => (f_x + y) >> DONE
+
+comatch g :prd: Fun:
+  apply'': => f_clos >> apply'(a)
+
+comatch main :prd: FunA:
+  apply'(main_x) => f >> apply'(main_x)

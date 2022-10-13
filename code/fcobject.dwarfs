@@ -1,0 +1,563 @@
+TRAIT Foo
+  Foo.bar1(y: A) -> A
+  Foo.bar2() -> A
+
+f(x: A) -> Foo
+  return CLASS {
+    bar1(y) => return x+y,
+    bar2() => return x
+  }
+
+g(foo: Foo) -> A = return foo.bar1(a)+foo.bar2()
+
+main(x) = g(f(x))
+---------------------------------------------------------------------------------------------------
+compile-codata
+---------------------------------------------------------------------------------------------------
+codata FunX:
+  apply'(:prd: X) :con: FunX
+
+codata FunXY:
+  apply(:prd: X, :con: Y) :con: FunXY
+
+codata RecordX
+  get(:con: X) :con: RecordX
+
+codata Foo
+  bar1(:prd: A, :con: A) :con: Foo
+  bar2(:con: A) :con: Foo
+
+comatch f :prd: FunAFoo
+  apply($_prd_1, $_con_1) => f_class >> $_con_1
+
+comatch f_class :prd: Foo
+  bar1($_prd_1, $_con_1) => (f_apply_prd_1 + $_prd_1) >> $_con_1
+  bar2($_con_1) => f_apply_prd_1 >> $_con_1
+
+comatch g :prd: FunFooA
+  apply($_prd_1, $_con_1) =>
+    g_a >> get(mu(x_a :prd: A). g_b >> get(mu(x_b: prd: A). x_a + x_b >> $_con_1))
+
+comatch g_a :prd: RecordA
+  get($_con_1) => g_apply_prd_1 >> bar1(a, $_con_1)
+
+comatch g_b :prd: RecordA
+  get($_con_1) => g_apply_prd_1 >> bar2($_con_1)
+
+comatch main :prd: FunA
+  apply'($_prd_1) => f >> apply($_prd_1, mu(F :prd: FunAA).g >> apply(F, DONE))
+---------------------------------------------------------------------------------------------------
+drop(f_apply_con_1 |-> mu...)
+---------------------------------------------------------------------------------------------------
+codata FunX:
+  apply'(:prd: X) :con: FunX
+
+codata FunXY:
+  apply(:prd: X, :con: Y) :con: FunXY
+
+codata RecordX
+  get(:con: X) :con: RecordX
+
+codata Foo
+  bar1(:prd: A, :con: A) :con: Foo
+  bar2(:con: A) :con: Foo
+
+comatch f :prd: FunA
+  apply'($_prd_1) => f_class >> mu(F :prd: FunAA).g >> apply(F, DONE)
+
+comatch f_class :prd: Foo
+  bar1($_prd_1, $_con_1) => (f_apply'_prd_1 + $_prd_1) >> $_con_1
+  bar2($_con_1) => f_apply'_prd_1 >> $_con_1
+
+comatch g :prd: FunFooA
+  apply($_prd_1, $_con_1) =>
+    g_a >> get(mu(x_a :prd: A). g_b >> get(mu(x_b: prd: A). x_a + x_b >> $_con_1))
+
+comatch g_a :prd: RecordA
+  get($_con_1) => g_apply_prd_1 >> bar1(a, $_con_1)
+
+comatch g_b :prd: RecordA
+  get($_con_1) => g_apply_prd_1 >> bar2($_con_1)
+
+comatch main :prd: FunA
+  apply'($_prd_1) => f >> apply'($_prd_1)
+---------------------------------------------------------------------------------------------------
+drop(g_apply_prd_1 |-> F, g_apply_con_1 |-> DONE)
+---------------------------------------------------------------------------------------------------
+codata Fun:
+  apply'' :con: Fun
+
+codata FunX:
+  apply'(:prd: X) :con: FunX
+
+codata FunXY:
+  apply(:prd: X, :con: Y) :con: FunXY
+
+codata RecordX
+  get(:con: X) :con: RecordX
+
+codata Foo
+  bar1(:prd: A, :con: A) :con: Foo
+  bar2(:con: A) :con: Foo
+
+comatch f :prd: FunA
+  apply'($_prd_1) => f_class >> mu(F :prd: FunAA).g >> apply''
+
+comatch f_class :prd: Foo
+  bar1($_prd_1, $_con_1) => (f_apply'_prd_1 + $_prd_1) >> $_con_1
+  bar2($_con_1) => f_apply'_prd_1 >> $_con_1
+
+comatch g :prd: Fun
+  apply'' => g_a >> get(mu(x_a :prd: A). g_b >> get(mu(x_b: prd: A). x_a + x_b >> DONE))
+
+comatch g_a :prd: RecordA
+  get($_con_1) => F >> bar1(a, $_con_1)
+
+comatch g_b :prd: RecordA
+  get($_con_1) => F >> bar2($_con_1)
+
+comatch main :prd: FunA
+  apply'($_prd_1) => f >> apply'($_prd_1)
+---------------------------------------------------------------------------------------------------
+drop(F |-> f_class)
+---------------------------------------------------------------------------------------------------
+codata Fun:
+  apply'' :con: Fun
+
+codata FunX:
+  apply'(:prd: X) :con: FunX
+
+codata FunXY:
+  apply(:prd: X, :con: Y) :con: FunXY
+
+codata RecordX
+  get(:con: X) :con: RecordX
+
+codata Foo
+  bar1(:prd: A, :con: A) :con: Foo
+  bar2(:con: A) :con: Foo
+
+comatch f :prd: FunA
+  apply'($_prd_1) => g >> apply''
+
+comatch f_class :prd: Foo
+  bar1($_prd_1, $_con_1) => (f_apply'_prd_1 + $_prd_1) >> $_con_1
+  bar2($_con_1) => f_apply'_prd_1 >> $_con_1
+
+comatch g :prd: Fun
+  apply'' => g_a >> get(mu(x_a :prd: A). g_b >> get(mu(x_b: prd: A). x_a + x_b >> DONE))
+
+comatch g_a :prd: RecordA
+  get($_con_1) => f_class >> bar1(a, $_con_1)
+
+comatch g_b :prd: RecordA
+  get($_con_1) => f_class >> bar2($_con_1)
+
+comatch main :prd: FunA
+  apply'($_prd_1) => f >> apply'($_prd_1)
+---------------------------------------------------------------------------------------------------
+drop(g_a_get_con_1 |-> mu...)
+---------------------------------------------------------------------------------------------------
+codata Fun:
+  apply'' :con: Fun
+
+codata FunX:
+  apply'(:prd: X) :con: FunX
+
+codata FunXY:
+  apply(:prd: X, :con: Y) :con: FunXY
+
+codata Record
+  get' :con: Record
+
+codata RecordX
+  get(:con: X) :con: RecordX
+
+codata Foo
+  bar1(:prd: A, :con: A) :con: Foo
+  bar2(:con: A) :con: Foo
+
+comatch f :prd: FunA
+  apply'($_prd_1) => g >> apply''
+
+comatch f_class :prd: Foo
+  bar1($_prd_1, $_con_1) => (f_apply'_prd_1 + $_prd_1) >> $_con_1
+  bar2($_con_1) => f_apply'_prd_1 >> $_con_1
+
+comatch g :prd: Fun
+  apply'' => g_a >> get'
+
+comatch g_a :prd: Record
+  get' => f_class >> bar1(a, mu(x_a :prd: A). g_b >> get(mu(x_b: prd: A). x_a + x_b >> DONE))
+
+comatch g_b :prd: RecordA
+  get($_con_1) => f_class >> bar2($_con_1)
+
+comatch main :prd: FunA
+  apply'($_prd_1) => f >> apply'($_prd_1)
+---------------------------------------------------------------------------------------------------
+drop(f_class_bar1_con_1 |-> mu...)
+---------------------------------------------------------------------------------------------------
+codata Fun:
+  apply'' :con: Fun
+
+codata FunX:
+  apply'(:prd: X) :con: FunX
+
+codata FunXY:
+  apply(:prd: X, :con: Y) :con: FunXY
+
+codata Record
+  get' :con: Record
+
+codata RecordX
+  get(:con: X) :con: RecordX
+
+codata Foo'
+  bar1'(:prd: A) :con: Foo'
+  bar2'(:con: A) :con: Foo'
+
+codata Foo
+  bar1(:prd: A, :con: A) :con: Foo
+  bar2(:con: A) :con: Foo
+
+comatch f :prd: FunA
+  apply'($_prd_1) => g >> apply''
+
+comatch f_class :prd: Foo
+  bar1($_prd_1, $_con_1) => (f_apply'_prd_1 + $_prd_1) >> $_con_1
+  bar2($_con_1) => f_apply'_prd_1 >> $_con_1
+
+comatch f_class' :prd: Foo'
+  bar1'($_prd_1) =>
+    (f_apply'_prd_1 + $_prd_1) >> mu(x_a :prd: A). g_b >> get(mu(x_b: prd: A). x_a + x_b >> DONE)
+  bar2'($_con_1) => f_apply'_prd_1 >> $_con_1
+
+comatch g :prd: Fun
+  apply'' => g_a >> get'
+
+comatch g_a :prd: Record
+  get' => f_class' >> bar1'(a)
+
+comatch g_b :prd: RecordA
+  get($_con_1) => f_class >> bar2($_con_1)
+
+comatch main :prd: FunA
+  apply'($_prd_1) => f >> apply'($_prd_1)
+---------------------------------------------------------------------------------------------------
+drop(g_b_get_con_1 |-> mu...)
+---------------------------------------------------------------------------------------------------
+codata Fun:
+  apply'' :con: Fun
+
+codata FunX:
+  apply'(:prd: X) :con: FunX
+
+codata FunXY:
+  apply(:prd: X, :con: Y) :con: FunXY
+
+codata Record
+  get' :con: Record
+
+codata RecordX
+  get(:con: X) :con: RecordX
+
+codata Foo'
+  bar1'(:prd: A) :con: Foo'
+  bar2'(:con: A) :con: Foo'
+
+codata Foo
+  bar1(:prd: A, :con: A) :con: Foo
+  bar2(:con: A) :con: Foo
+
+comatch f :prd: FunA
+  apply'($_prd_1) => g >> apply''
+
+comatch f_class :prd: Foo
+  bar1($_prd_1, $_con_1) => (f_apply'_prd_1 + $_prd_1) >> $_con_1
+  bar2($_con_1) => f_apply'_prd_1 >> $_con_1
+
+comatch f_class' :prd: Foo'
+  bar1'($_prd_1) =>
+    (f_apply'_prd_1 + $_prd_1) >> mu(x_a :prd: A). g_b >> get'
+  bar2'($_con_1) => f_apply'_prd_1 >> $_con_1
+
+comatch g :prd: Fun
+  apply'' => g_a >> get'
+
+comatch g_a :prd: Record
+  get' => f_class' >> bar1'(a)
+
+comatch g_b :prd: Record
+  get' => f_class >> bar2(mu(x_b: prd: A). x_a + x_b >> DONE)
+
+comatch main :prd: FunA
+  apply'($_prd_1) => f >> apply'($_prd_1)
+---------------------------------------------------------------------------------------------------
+drop(f_class_bar2_con_1 |-> mu...)
+---------------------------------------------------------------------------------------------------
+codata Fun:
+  apply'' :con: Fun
+
+codata FunX:
+  apply'(:prd: X) :con: FunX
+
+codata FunXY:
+  apply(:prd: X, :con: Y) :con: FunXY
+
+codata Record
+  get' :con: Record
+
+codata RecordX
+  get(:con: X) :con: RecordX
+
+codata Foo''
+  bar1''(:prd: A, :con: A) :con: Foo''
+  bar2'' :con: Foo''
+
+codata Foo'
+  bar1'(:prd: A) :con: Foo'
+  bar2'(:con: A) :con: Foo'
+
+codata Foo
+  bar1(:prd: A, :con: A) :con: Foo
+  bar2(:con: A) :con: Foo
+
+comatch f :prd: FunA
+  apply'($_prd_1) => g >> apply''
+
+comatch f_class :prd: Foo
+  bar1($_prd_1, $_con_1) => (f_apply'_prd_1 + $_prd_1) >> $_con_1
+  bar2($_con_1) => f_apply'_prd_1 >> $_con_1
+
+comatch f_class' :prd: Foo'
+  bar1'($_prd_1) => (f_apply'_prd_1 + $_prd_1) >> mu(x_a :prd: A). g_b >> get'
+  bar2'($_con_1) => f_apply'_prd_1 >> $_con_1
+
+comatch f_class'' :prd: Foo''
+  bar1''($_prd_1, $_con_1) => (f_apply'_prd_1 + $_prd_1) >> $_con_1
+  bar2'' => f_apply'_prd_1 >> mu(x_b: prd: A). x_a + x_b >> DONE
+
+comatch g :prd: Fun
+  apply'' => g_a >> get'
+
+comatch g_a :prd: Record
+  get' => f_class' >> bar1'(a)
+
+comatch g_b :prd: Record
+  get' => f_class'' >> bar2''
+
+comatch main :prd: FunA
+  apply'($_prd_1) => f >> apply'($_prd_1)
+---------------------------------------------------------------------------------------------------
+drop(x_a |-> f_apply'_prd_1 + f_class'_bar1'_prd_1)
+---------------------------------------------------------------------------------------------------
+codata Fun:
+  apply'' :con: Fun
+
+codata FunX:
+  apply'(:prd: X) :con: FunX
+
+codata FunXY:
+  apply(:prd: X, :con: Y) :con: FunXY
+
+codata Record
+  get' :con: Record
+
+codata RecordX
+  get(:con: X) :con: RecordX
+
+codata Foo''
+  bar1''(:prd: A, :con: A) :con: Foo'
+  bar2'' :con: Foo'
+
+codata Foo'
+  bar1'(:prd: A) :con: Foo'
+  bar2'(:con: A) :con: Foo'
+
+codata Foo
+  bar1(:prd: A, :con: A) :con: Foo
+  bar2(:con: A) :con: Foo
+
+comatch f :prd: FunA
+  apply'($_prd_1) => g >> apply''
+
+comatch f_class :prd: Foo
+  bar1($_prd_1, $_con_1) => (f_apply'_prd_1 + $_prd_1) >> $_con_1
+  bar2($_con_1) => f_apply'_prd_1 >> $_con_1
+
+comatch f_class' :prd: Foo'
+  bar1'($_prd_1) => g_b >> get'
+  bar2'($_con_1) => f_apply'_prd_1 >> $_con_1
+
+comatch f_class'' :prd: Foo''
+  bar1''($_prd_1, $_con_1) => (f_apply'_prd_1 + $_prd_1) >> $_con_1
+  bar2'' => f_apply'_prd_1 >> mu(x_b: prd: A). f_apply'_prd_1 + f_class'_bar'_prd_1 + x_b >> DONE
+
+comatch g :prd: Fun
+  apply'' => g_a >> get'
+
+comatch g_a :prd: Record
+  get' => f_class' >> bar1'(a)
+
+comatch g_b :prd: Record
+  get' => f_class'' >> bar2''
+
+comatch main :prd: FunA
+  apply'($_prd_1) => f >> apply'($_prd_1)
+---------------------------------------------------------------------------------------------------
+drop(x_a |-> f_apply'_prd_1 + f_class'_bar1'_prd_1)
+---------------------------------------------------------------------------------------------------
+codata Fun:
+  apply'' :con: Fun
+
+codata FunX:
+  apply'(:prd: X) :con: FunX
+
+codata FunXY:
+  apply(:prd: X, :con: Y) :con: FunXY
+
+codata Record
+  get' :con: Record
+
+codata RecordX
+  get(:con: X) :con: RecordX
+
+codata Foo''
+  bar1''(:prd: A, :con: A) :con: Foo''
+  bar2'' :con: Foo''
+
+codata Foo'
+  bar1'(:prd: A) :con: Foo'
+  bar2'(:con: A) :con: Foo'
+
+codata Foo
+  bar1(:prd: A, :con: A) :con: Foo
+  bar2(:con: A) :con: Foo
+
+comatch f :prd: FunA
+  apply'($_prd_1) => g >> apply''
+
+comatch f_class :prd: Foo
+  bar1($_prd_1, $_con_1) => (f_apply'_prd_1 + $_prd_1) >> $_con_1
+  bar2($_con_1) => f_apply'_prd_1 >> $_con_1
+
+comatch f_class' :prd: Foo'
+  bar1'($_prd_1) => g_b >> get'
+  bar2'($_con_1) => f_apply'_prd_1 >> $_con_1
+
+comatch f_class'' :prd: Foo''
+  bar1''($_prd_1, $_con_1) => (f_apply'_prd_1 + $_prd_1) >> $_con_1
+  bar2'' => f_apply'_prd_1 >> mu(x_b: prd: A). f_apply'_prd_1 + f_class'_bar'_prd_1 + x_b >> DONE
+
+comatch g :prd: Fun
+  apply'' => g_a >> get'
+
+comatch g_a :prd: Record
+  get' => f_class' >> bar1'(a)
+
+comatch g_b :prd: Record
+  get' => f_class'' >> bar2''
+
+comatch main :prd: FunA
+  apply'($_prd_1) => f >> apply'($_prd_1)
+---------------------------------------------------------------------------------------------------
+drop(x_b |-> f_apply'_prd_1)
+---------------------------------------------------------------------------------------------------
+codata Fun:
+  apply'' :con: Fun
+
+codata FunX:
+  apply'(:prd: X) :con: FunX
+
+codata FunXY:
+  apply(:prd: X, :con: Y) :con: FunXY
+
+codata Record
+  get' :con: Record
+
+codata RecordX
+  get(:con: X) :con: RecordX
+
+codata Foo''
+  bar1''(:prd: A, :con: A) :con: Foo''
+  bar2'' :con: Foo''
+
+codata Foo'
+  bar1'(:prd: A) :con: Foo'
+  bar2'(:con: A) :con: Foo'
+
+codata Foo
+  bar1(:prd: A, :con: A) :con: Foo
+  bar2(:con: A) :con: Foo
+
+comatch f :prd: FunA
+  apply'($_prd_1) => g >> apply''
+
+comatch f_class :prd: Foo                                                     // dead code
+  bar1($_prd_1, $_con_1) => (f_apply'_prd_1 + $_prd_1) >> $_con_1             // dead code
+  bar2($_con_1) => f_apply'_prd_1 >> $_con_1                                  // dead code
+
+comatch f_class' :prd: Foo'
+  bar1'($_prd_1) => g_b >> get'
+  bar2'($_con_1) => f_apply'_prd_1 >> $_con_1                                 // dead code
+
+comatch f_class'' :prd: Foo''
+  bar1''($_prd_1, $_con_1) => (f_apply'_prd_1 + $_prd_1) >> $_con_1           // dead code
+  bar2'' => f_apply'_prd_1 + f_class'_bar'_prd_1 + f_apply'_prd_1 >> DONE
+
+comatch g :prd: Fun
+  apply'' => g_a >> get'
+
+comatch g_a :prd: Record
+  get' => f_class' >> bar1'(a)
+
+comatch g_b :prd: Record
+  get' => f_class'' >> bar2''
+
+comatch main :prd: FunA
+  apply'($_prd_1) => f >> apply'($_prd_1)
+---------------------------------------------------------------------------------------------------
+dead code elimination
+---------------------------------------------------------------------------------------------------
+codata Fun:
+  apply'' :con: Fun
+
+codata FunX:
+  apply'(:prd: X) :con: FunX
+
+codata FunXY:
+  apply(:prd: X, :con: Y) :con: FunXY
+
+codata Record
+  get' :con: Record
+
+codata RecordA
+  get(:con: X) :con: RecordX
+
+codata Foo''
+  bar2'' :con: Foo''
+
+codata Foo'
+  bar1'(:prd: A) :con: Foo'
+
+comatch f :prd: FunA
+  apply'($_prd_1) => g >> apply''
+
+comatch f_class' :prd: Foo'
+  bar1'($_prd_1) => g_b >> get'
+
+comatch f_class'' :prd: Foo''
+  bar2'' => f_apply'_prd_1 + f_class'_bar'_prd_1 + f_apply'_prd_1 >> DONE
+
+comatch g :prd: Fun
+  apply'' => g_a >> get'
+
+comatch g_a :prd: Record
+  get' => f_class' >> bar1'(a)
+
+comatch g_b :prd: Record
+  get' => f_class'' >> bar2''
+
+comatch main :prd: FunA
+  apply'($_prd_1) => f >> apply'($_prd_1)

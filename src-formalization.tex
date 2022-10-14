@@ -1,1 +1,981 @@
+In the formalization of the language we use an orientation parameter $\pol \in \{ \polprd,\polcon \}$ and functions
 
+\begin{align*}
+  \boxed{\polprd}
+  :=\ >
+  \quad
+  \boxed{\polcon}
+  :=\ <
+  \qquad
+  \widehat{\polprd}
+  :=\ \polcon
+  \quad
+  \widehat{\polcon}
+  :=\ \polprd
+\end{align*}
+
+\subsection{Syntax}
+
+The syntax is defined in \cref{fig:?:syntax}.
+
+\begin{figure}[H]
+    \setlength{\abovedisplayskip}{0pt}
+    \setlength{\belowdisplayskip}{0pt}
+    \setlength{\abovedisplayshortskip}{0pt}
+    \setlength{\belowdisplayshortskip}{0pt}
+  \[
+  \begin{array}{lclr}
+    \multicolumn{4}{r}{
+      i \in \mathbb{N}
+      \quad
+      \mathcal{U} \in \mu\textsc{Abs}
+      \quad
+      \mathcal{C} \in \textsc{Ctor}
+      \quad
+      \mathcal{D} \in \textsc{Dtor}
+      \quad
+      \mathcal{T} \in \textsc{Type}
+      \mspace{60mu}
+      \emph{Names}
+    }
+    \\
+    \multicolumn{4}{r}{
+      a \in \textsc{Contants}
+      \mspace{60mu}
+      \emph{Values}
+    }
+    \\[0.5cm]
+
+    % Types
+    T
+    & \Coloneqq
+    & \Bool\ |\ \Int\ |\ \mathcal{T}
+    & \emph{Types}
+    \\[0.5cm]
+
+    % o-Signature
+    \Sigma^{\pol}
+    & \Coloneqq
+    & \varnothing\ |\ \prdcon T
+    & \emph{$\pol$-Signature}
+    \\[0.5cm]
+
+    % prd-Terms
+    t^{\polprd}
+    & \Coloneqq
+    & \otimes\big(\overline{t^{\polprd}}\big)
+    & \emph{Primitive-Operator-Application}
+    \\
+    & | & \mathcal{C}
+    & \emph{Constructor}
+    \\
+    & | & \mathcal{C}\text{-}\mathcal{D}^{i}
+    & \emph{$\polprd$-Parameter}
+    \\
+    & | & \mathcal{U}^{i}
+    & \emph{$\mu$-Parameter}
+    \\[0.5cm]
+
+    % con-Terms
+    t^{\polcon}
+    & \Coloneqq
+    & \mathcal{C}\text{-}\mathcal{D}_{i}
+    & \emph{$\polcon$-Parameter}
+    \\
+    & | & \mathcal{D}\big(\overline{t^{\polprd}}\big)\big[\overline{t^{\polcon}}\big]
+    & \emph{Destructor-Application}
+    \\
+    & | & \mathcal{U}
+    & \emph{$\mu$-Abstraction}
+    \\[0.5cm]
+
+    % Commands
+    c
+    & \Coloneqq
+    & t^{\polprd} \mkCmd t^{\polcon}
+    & \emph{Command}
+    \\[0.5cm]
+
+    % Codata Declarations
+    D
+    & \Coloneqq
+    & \codata\
+      \mathcal{T}\
+      \where\
+      \overline{\mathcal{D}\Sigma^{\polprd}\Sigma^{\polcon}}\
+    & \emph{Codata Declaration}
+    \\[0.5cm]
+
+    % Programs
+    P
+    & \Coloneqq
+    & \textsc{Ctor} \to D
+      := \match\
+         \overline{\mathcal{D} \Rightarrow c}
+      \quad
+      \&\&
+      \quad
+      \mu\textsc{Abs} \to c
+    & \emph{Programs}
+    \\[0.5cm]
+
+    % prd-Values
+    v^{\polprd}
+    & \Coloneqq
+    & a
+    & \emph{Literal}
+    \\
+    & | & \langle \mathcal{C}, \sigma \rangle
+    & \emph{Object}
+    \\[0.5cm]
+
+    % con-Values
+    v^{\polcon}
+    & \Coloneqq
+    & \Done
+    & \emph{Top-Level Consumer}
+    \\[0.5cm]
+  \end{array}
+  \]
+  \caption{Syntax.}
+  \label{fig:?:syntax}
+\end{figure}
+
+\subsection{Semantics}
+
+\subsection{Typing}
+
+\subsection{Liveness}
+
+
+%\subsection{Terms}
+%
+%\begin{prooftree}
+%  \AxiomC{}
+%  \RightLabel{\textsc{Tm-$\pol$-Var}}
+%  \UnaryInfC{$
+%    \typetm
+%      {\Gamma^{\pol}, x^{\pol} \prdcon T}
+%      {\Theta^{\pol}}
+%      {x^{\pol}}
+%      {T}
+%  $}
+%\end{prooftree}
+%\vspace*{0.3cm}
+%
+%\begin{prooftree}
+%  \AxiomC{$
+%    \mathcal{C}^{\pol}\Gamma_{\mathcal{C}}^{\pol}
+%    \in
+%    \textsc{Ctor}(\mathcal{T}^{\pol})
+%  $}
+%  \AxiomC{$
+%    \forall i,\
+%    \typetm
+%      {\Gamma^{\pol}}
+%      {\Theta^{\pol}}
+%      {t_{i}^{\pol}}
+%      {\Gamma_{\mathcal{C}}^{\pol}(i)}
+%  $}
+%  \RightLabel{\textsc{Tm-$\pol$-Ctor}}
+%  \BinaryInfC{$
+%    \typetm
+%      {\Gamma^{\pol}}
+%      {\Theta^{\pol}}
+%      {\mathcal{C}^{\pol}\overline{t_{i}^{\pol}}}
+%      {\mathcal{T}^{\pol}}
+%  $}
+%\end{prooftree}
+%\vspace*{0.3cm}
+%
+%\begin{prooftree}
+%  \AxiomC{$
+%    \mathcal{D}^{\pol}\Gamma_{\mathcal{D}}^{\pol}\overline{H}
+%    \in
+%    \textsc{Dtor}(\mathcal{T}^{\flip{\pol}})
+%  $}
+%  \AxiomC{$
+%    \forall i,\
+%    \typetm
+%      {\Gamma^{\pol}}
+%      {\Theta^{\pol}}
+%      {t_{i}^{\pol}}
+%      {\Gamma_{\mathcal{D}}^{\pol}(i)}
+%  $}
+%  \AxiomC{$
+%    \overline{
+%      \typehndlr
+%        {h}
+%        {H}
+%    }
+%  $}
+%  \RightLabel{\textsc{Tm-$\pol$-Dtor}}
+%  \TrinaryInfC{$
+%    \typetm
+%      {\Gamma^{\pol}}
+%      {\Theta^{\pol}}
+%      {\mathcal{D}^{\pol}\overline{t_{i}^{\pol}}\, \overline{h}}
+%      {\mathcal{T}^{\flip{\pol}}}
+%  $}
+%\end{prooftree}
+%\vspace*{0.3cm}
+%
+%\begin{prooftree}
+%\scriptsize
+%  \AxiomC{$
+%    (\mathcal{F}^{\pol}\Gamma_{\mathcal{F}}^{\pol}\Theta_{\mathcal{F}}^{\pol}\ , T)
+%    \in
+%    \textsc{Fun}(\mathcal{T}^{\pol})
+%  $}
+%  \AxiomC{$
+%    \forall i,\
+%    \typetm
+%      {\Gamma^{\pol}}
+%      {\Theta^{\pol}}
+%      {t_{i}^{\pol}}
+%      {\Gamma_{\mathcal{F}}^{\pol}(i)}
+%  $}
+%  \AxiomC{$
+%    \forall i,\
+%    \typeblk
+%      {\Gamma^{\pol}}
+%      {\Theta^{\pol}}
+%      {b_{i}^{\pol}}
+%      {\Theta_{\mathcal{F}}^{\pol}(i)}
+%  $}
+%  \AxiomC{$
+%    \typetm
+%      {\Gamma^{\pol}}
+%      {\Theta^{\pol}}
+%      {t^{\pol}}
+%      {\mathcal{T}^{\pol}}
+%  $}
+%  \RightLabel{\textsc{Tm-$\pol$-Fun}}
+%  \QuaternaryInfC{$
+%    \typetm
+%      {\Gamma^{\pol}}
+%      {\Theta^{\pol}}
+%      {t^{\pol}\ \boxed{\pol}\ \mathcal{F}^{\pol}(\overline{t_{i}^{\pol}}, \overline{b_{i}^{\pol}})}
+%      {T}
+%  $}
+%\end{prooftree}
+%\vspace*{0.3cm}
+%
+%\begin{prooftree}
+%  \AxiomC{$
+%    \typeblk
+%      {\Gamma^{\pol}}
+%      {\Theta^{\pol}}
+%      {b^{\pol}}
+%      {(\overline{T}, \overline{B^{\pol}}) \to^{\pol} T_{0}}
+%  $}
+%  \AxiomC{$
+%    \overline{
+%      \typetm
+%        {\Gamma^{\pol}}
+%        {\Theta^{\pol}}
+%        {t^{\pol}}
+%        {T}
+%    }
+%  $}
+%  \AxiomC{$
+%    \overline{
+%      \typeblk
+%        {\Gamma^{\pol}}
+%        {\Theta^{\pol}}
+%        {b^{\pol}}
+%        {B}
+%    }
+%  $}
+%  \RightLabel{\textsc{Tm-$\pol$-Blk}}
+%  \TrinaryInfC{$
+%    \typetm
+%      {\Gamma^{\pol}}
+%      {\Theta^{\pol}}
+%      {b^{\pol}(\overline{t^{\pol}},\overline{b^{\pol}})}
+%      {T_{0}}
+%  $}
+%\end{prooftree}
+%
+%\subsection{Commands}
+%
+%\begin{prooftree}
+%  \AxiomC{$
+%    \typetmprd
+%      {\Gamma^{\polprd}}
+%      {k^{\polprd} : T_{1} \to^{\polprd} T_{2}}
+%      {t^{\polprd}}
+%      {\mathcal{T}^{\polprd}}
+%  $}
+%  \AxiomC{$
+%    \typetmcon
+%      {\Gamma^{\polcon}}
+%      {\varnothing}
+%      {t^{\polcon}}
+%      {\mathcal{T}^{\polprd}}
+%  $}
+%  \RightLabel{\textsc{Cmd-$\polprd$-Eff}}
+%  \BinaryInfC{$
+%    \typecmd
+%      {\Gamma^{\polprd}}
+%      {\Gamma^{\polcon}}
+%      {\big( k^{\polprd} \Rightarrow t^{\polprd} \big) \mkCmd_{\mathcal{T}^{\polprd}} t^{\polcon}}
+%      {T_{1} \times (T_{2} \to^{\polprd} \mathcal{T}^{\polprd})}
+%  $}
+%\end{prooftree}
+%\vspace*{0.3cm}
+%
+%\begin{prooftree}
+%  \AxiomC{$
+%    \typetmcon
+%      {\Gamma^{\polcon}}
+%      {k^{\polcon} : T_{1} \to^{\polcon} T_{2}}
+%      {t^{\polcon}}
+%      {\mathcal{T}^{\polcon}}
+%  $}
+%  \AxiomC{$
+%    \typetmprd
+%      {\Gamma^{\polprd}}
+%      {\varnothing}
+%      {t^{\polprd}}
+%      {\mathcal{T}^{\polcon}}
+%  $}
+%  \RightLabel{\textsc{Cmd-$\polcon$-Eff}}
+%  \BinaryInfC{$
+%    \typecmd
+%      {\Gamma^{\polprd}}
+%      {\Gamma^{\polcon}}
+%      {t^{\polprd} \mkCmd_{\mathcal{T}^{\polcon}} \big( k^{\polcon} \Rightarrow t^{\polcon} \big)}
+%      {T_{1} \times (T_{2} \to^{\polcon} \mathcal{T}^{\polcon})}
+%  $}
+%\end{prooftree}
+%\vspace*{0.3cm}
+%
+%\begin{prooftree}
+%  \AxiomC{}
+%  \RightLabel{\textsc{Cmd-Done}}
+%  \UnaryInfC{$
+%    \typecmd
+%      {\Gamma^{\polprd}}
+%      {\Gamma^{\polcon}}
+%      {\Done}
+%      {\Void}
+%  $}
+%\end{prooftree}
+%
+%\subsection{Well-formedness}
+%
+%\begin{prooftree}
+%  \AxiomC{$
+%    \forall i,\
+%    \typetm
+%      {\Gamma^{\pol},\Gamma_{i}^{\pol}}
+%      {\Theta^{\pol}}
+%      {t_{i}^{\pol}}
+%      {T}
+%  $}
+%  \RightLabel{\textsc{Wf-$\pol$-Fun}}
+%  \UnaryInfC{$
+%    \typewf{
+%      \define\
+%      \mathcal{T}^{\pol}\ \boxed{\pol}\ \mathcal{F}^{\pol}\Gamma^{\pol}\Theta^{\pol}
+%      \prdcon T
+%      := \match_{1}\
+%         \overline{
+%           \mathcal{C}_{i}^{\pol}\Gamma_{i}^{\pol}
+%           \Rightarrow
+%           t_{i}^{\pol}
+%         }
+%    }
+%  $}
+%\end{prooftree}
+%\vspace*{0.3cm}
+%
+%\begin{prooftree}
+%  \AxiomC{$
+%    \forall i,\
+%    \typecmd
+%      {\Gamma^{\polprd}}
+%      {\Gamma_{i}^{\polcon}}
+%      {c_{i}}
+%      {H_{i}}
+%  $}
+%  \RightLabel{\textsc{Wf-$\polprd$-Dtor}}
+%  \UnaryInfC{$
+%    \typewf{
+%      \define\
+%      \mathcal{D}^{\polprd}\Gamma^{\polprd}\overline{H_{i}} \prd \mathcal{T}^{\polcon}
+%      := \match_{2}\
+%         \overline{
+%           \mathcal{C}_{i}^{\polcon}\Gamma_{i}^{\polcon}
+%           \Rightarrow
+%           c_{i}
+%         }
+%    }
+%  $}
+%\end{prooftree}
+%\vspace*{0.3cm}
+%
+%\begin{prooftree}
+%  \AxiomC{$
+%    \forall i,\
+%    \typecmd
+%      {\Gamma_{i}^{\polprd}}
+%      {\Gamma^{\polcon}}
+%      {c_{i}}
+%      {H_{i}}
+%  $}
+%  \RightLabel{\textsc{Wf-$\polcon$-Dtor}}
+%  \UnaryInfC{$
+%    \typewf{
+%      \define\
+%      \mathcal{D}^{\polcon}\Gamma^{\polcon}\overline{H_{i}} \con \mathcal{T}^{\polprd}
+%      := \match_{2}\
+%         \overline{
+%           \mathcal{C}_{i}^{\polprd}\Gamma_{i}^{\polprd}
+%           \Rightarrow
+%           c_{i}
+%         }
+%    }
+%  $}
+%\end{prooftree}
+%\vspace*{0.3cm}
+%
+%\begin{prooftree}
+%  \AxiomC{$\typewf{\overline{fun^{\pol}}}$}
+%  \AxiomC{$\typewf{\overline{dtor^{\flip{\pol}}}}$}
+%  \RightLabel{\textsc{Wf-$\pol$-type}}
+%  \BinaryInfC{$
+%    \typewf{
+%      \pol\
+%      \type\
+%      \mathcal{T}^{\pol}\
+%      \where\
+%      \overline{\mathcal{C}_{i}^{\pol}\Gamma_{i}^{\pol}}\
+%      \with\
+%      \overline{fun^{\pol}}
+%      ++\
+%      \overline{dtor^{\flip{\pol}}}
+%    }
+%  $}
+%\end{prooftree}
+%\vspace*{0.3cm}
+%
+%\begin{minipage}{0.4\textwidth}
+%  \begin{prooftree}
+%    \AxiomC{}
+%    \RightLabel{\textsc{Wf-Prog-Nil}}
+%    \UnaryInfC{$\typewf{()}$}
+%  \end{prooftree}
+%\end{minipage}
+%\begin{minipage}{0.4\textwidth}
+%  \begin{prooftree}
+%    \AxiomC{$\typewf{P}$}
+%    \AxiomC{$\typewf{D^{\pol}}$}
+%    \RightLabel{\textsc{Wf-Prog-$\pol$-Cons}}
+%    \BinaryInfC{$\typewf{(P,D^{\pol})}$}
+%  \end{prooftree}
+%\end{minipage}
+
+%\subsection{Operational Semantics}
+%\[
+%  \begin{array}{lclr} 
+%    % o-Values
+%    v^{\pol}
+%    & \Coloneqq
+%    & \mathcal{C}^{\pol}\overline{v^{\pol}}
+%      \ |\
+%      \mathcal{D}^{\pol}\overline{v^{\pol}}\, \overline{h}
+%    & \emph{$\pol$-Values}
+%    \\[0.5cm]
+%
+%    % o-Contexts
+%    ctx^{\pol}
+%    & \Coloneqq
+%    & \square
+%    \\
+%    & | & \mathcal{C}^{\pol}
+%          (\overline{v^{\pol}},ctx^{\pol},\overline{t^{\pol}})
+%    \\
+%    & | & \mathcal{D}^{\pol}
+%          (\overline{v^{\pol}},ctx^{\pol},\overline{t^{\pol}})\,
+%          \overline{h}
+%    \\
+%    & | & ctx^{\pol}\ \boxed{\pol}\ \mathcal{F}^{\pol}\sigma^{\pol}
+%    \\
+%    & | & v^{\pol}\
+%          \boxed{\pol}\
+%          \mathcal{F}^{\pol}
+%          \big( (\overline{v^{\pol}},ctx^{\pol},\overline{t^{\pol}}),\overline{b^{\pol}} \big)
+%    \\
+%    & | & b^{\pol}
+%          \big( (\overline{v^{\pol}},ctx^{\pol},\overline{t^{\pol}}),\overline{b^{\pol}} \big)
+%    & \emph{$\pol$-Contexts}
+%    \\[0.5cm]
+%
+%    % o-Blocks
+%    b^{\pol}
+%    & \Coloneqq
+%    & \ldots\ |\ \capab\{ (x^{\pol}, k^{\pol}) \Rightarrow t^{\pol} \}
+%    & \emph{$\pol$-Blocks}
+%    \\[0.5cm]
+%
+%    % Commands
+%    c
+%    & \Coloneqq
+%    & \ldots\ |\ t^{\polprd} \mkCmd_{T} t^{\polcon}
+%    & \emph{Commands}
+%    \\[0.5cm]
+%  \end{array}
+%\]
+%
+%\begin{minipage}{0.45\textwidth}
+%  \begin{prooftree}
+%  \scriptsize
+%    \AxiomC{$
+%      \mathcal{C}^{\pol}\Gamma^{\pol} \Rightarrow t^{\pol}
+%      \in
+%      \textsc{Cases}(\mathcal{F}^{\pol})
+%    $}
+%    \RightLabel{\textsc{R-$\pol$-Match1}}
+%    \UnaryInfC{$
+%      \mathcal{C}^{\pol}\overline{v^{\pol}}'\
+%      \boxed{\pol}\
+%      \mathcal{F}^{\pol}(\overline{v^{\pol}}, \overline{b^{\pol}})
+%      \reducesto_{\pol}
+%      t^{\pol}[\overline{v^{\pol}}'][\overline{v^{\pol}}][\overline{b^{\pol}}]
+%    $}
+%  \end{prooftree}
+%\end{minipage}
+%\begin{minipage}{0.45\textwidth}
+%  \begin{prooftree}
+%  \scriptsize
+%    \AxiomC{}
+%    \RightLabel{\textsc{R-$\pol$-App}}
+%    \UnaryInfC{$
+%      \left(
+%        (\overline{x^{\pol}}, \overline{k^{\pol}}) \Rightarrow t^{\pol}
+%      \right)
+%      (\overline{v^{\pol}}, \overline{b^{\pol}})
+%      \reducesto_{\pol}
+%      t^{\pol}[\overline{v^{\pol}}][\overline{b^{\pol}}]
+%    $}
+%  \end{prooftree}
+%\end{minipage}
+%\vspace*{0.3cm}
+%
+%\begin{prooftree}
+%  \AxiomC{$s^{\pol} \reducesto_{\pol} t^{\pol}$}
+%  \RightLabel{\textsc{R-$\pol$}}
+%  \UnaryInfC{$
+%    ctx^{\pol}[s^{\pol}]
+%    \reducesto_{\pol}
+%    ctx^{\pol}[t^{\pol}]
+%  $}
+%\end{prooftree}
+%\vspace*{0.3cm}
+%
+%\begin{prooftree}
+%\scriptsize
+%  \AxiomC{$
+%    \mathcal{C}_{i}^{\polcon}\Gamma_{i}^{\polcon}
+%    \Rightarrow
+%    \big( k^{\polprd} \Rightarrow t^{\polprd} \big) \mkCmd_{\mathcal{T}^{\polprd}} t^{\polcon}
+%    \in
+%    \textsc{Cases}(\mathcal{D}^{\polprd})
+%  $}
+%  \RightLabel{\textsc{R-$\polprd$-$\polprd$-Match2}}
+%  \UnaryInfC{$
+%    \left(
+%      \mathcal{D}^{\polprd}
+%      \overline{v^{\polprd}}
+%      \ldots, (x_{i}^{\polprd},k_{i}^{\polprd}) \Rightarrow t_{i}^{\polprd}, \ldots
+%      \mkCmd_{\mathcal{T}^{\polcon}}
+%      \mathcal{C}_{i}^{\polcon}\overline{v^{\polcon}}
+%    \right)
+%    \reducesto_{\cmd}
+%    \left(
+%      t^{\polprd}
+%      \left[
+%        \capab\{ (x_{i}^{\polprd},k_{i}^{\polprd}) \Rightarrow t_{i}^{\polprd} \} / k^{\polprd}
+%      \right]
+%      \mkCmd_{\mathcal{T}_{1}^{\polprd}}
+%      t^{\polcon}
+%    \right)
+%    [\overline{v^{\polprd}}]
+%    [\overline{v^{\polcon}}]
+%  $}
+%\end{prooftree}
+%\vspace*{0.3cm}
+%
+%\begin{prooftree}
+%\scriptsize
+%  \AxiomC{$
+%    \mathcal{C}_{i}^{\polprd}\Gamma_{i}^{\polprd}
+%    \Rightarrow
+%    \big( k^{\polprd} \Rightarrow t^{\polprd} \big) \mkCmd_{\mathcal{T}_{1}^{\polprd}} t^{\polcon}
+%    \in
+%    \textsc{Cases}(\mathcal{D}^{\polcon})
+%  $}
+%  \RightLabel{\textsc{R-$\polprd$-$\polcon$-Match2}}
+%  \UnaryInfC{$
+%    \left(
+%      \mathcal{C}_{i}^{\polprd}\overline{v^{\polprd}}
+%      \mkCmd_{\mathcal{T}_{2}^{\polprd}}
+%      \mathcal{D}^{\polcon}
+%      \overline{v^{\polcon}}
+%      \ldots, (x_{i}^{\polprd},k_{i}^{\polprd}) \Rightarrow t_{i}^{\polprd}, \ldots
+%    \right)
+%    \reducesto_{\cmd}
+%    \left(
+%      t^{\polprd}
+%      \left[
+%        \capab\{ (x_{i}^{\polprd},k_{i}^{\polprd}) \Rightarrow t_{i}^{\polprd} \} / k^{\polprd}
+%      \right]
+%      \mkCmd_{\mathcal{T}_{1}^{\polprd}}
+%      t^{\polcon}
+%    \right)
+%    [\overline{v^{\polprd}}]
+%    [\overline{v^{\polcon}}]
+%  $}
+%\end{prooftree}
+%\vspace*{0.3cm}
+%
+%\begin{prooftree}
+%\scriptsize
+%  \AxiomC{$
+%    \mathcal{C}_{i}^{\polcon}\Gamma_{i}^{\polcon}
+%    \Rightarrow
+%    t^{\polprd} \mkCmd_{\mathcal{T}_{1}^{\polcon}} \big( k^{\polcon} \Rightarrow t^{\polcon} \big)
+%    \in
+%    \textsc{Cases}(\mathcal{D}^{\polprd})
+%  $}
+%  \RightLabel{\textsc{R-$\polcon$-$\polprd$-Match2}}
+%  \UnaryInfC{$
+%    \left(
+%      \mathcal{D}^{\polprd}
+%      \overline{v^{\polprd}}
+%      \ldots, (x_{i}^{\polcon},k_{i}^{\polcon}) \Rightarrow t_{i}^{\polcon}, \ldots
+%      \mkCmd_{\mathcal{T}_{2}^{\polcon}}
+%      \mathcal{C}_{i}^{\polcon}\overline{v^{\polcon}}
+%    \right)
+%    \reducesto_{\cmd}
+%    \left(
+%      t^{\polprd}
+%      \mkCmd_{\mathcal{T}_{1}^{\polprd}}
+%      t^{\polcon}
+%      \left[
+%        \capab\{ (x_{i}^{\polcon},k_{i}^{\polcon}) \Rightarrow t_{i}^{\polcon} \} / k^{\polcon}
+%      \right]
+%    \right)
+%    [\overline{v^{\polprd}}]
+%    [\overline{v^{\polcon}}]
+%  $}
+%\end{prooftree}
+%\vspace*{0.3cm}
+%
+%\begin{prooftree}
+%\scriptsize
+%  \AxiomC{$
+%    \mathcal{C}_{i}^{\polprd}\Gamma_{i}^{\polprd}
+%    \Rightarrow
+%    t^{\polprd} \mkCmd_{\mathcal{T}^{\polcon}} \big( k^{\polcon} \Rightarrow t^{\polcon} \big)
+%    \in
+%    \textsc{Cases}(\mathcal{D}^{\polcon})
+%  $}
+%  \RightLabel{\textsc{R-$\polcon$-$\polcon$-Match2}}
+%  \UnaryInfC{$
+%    \left(
+%      \mathcal{C}_{i}^{\polprd}\overline{v^{\polprd}}
+%      \mkCmd_{\mathcal{T}^{\polprd}}
+%      \mathcal{D}^{\polcon}
+%      \overline{v^{\polcon}}
+%      \ldots, (x_{i}^{\polcon},k_{i}^{\polcon}) \Rightarrow t_{i}^{\polcon}, \ldots
+%    \right)
+%    \reducesto_{\cmd}
+%    \left(
+%      t^{\polprd}
+%      \mkCmd_{\mathcal{T}_{1}^{\polprd}}
+%      t^{\polcon}
+%      \left[
+%        \capab\{ (x_{i}^{\polcon},k_{i}^{\polcon}) \Rightarrow t_{i}^{\polcon} \} / k^{\polcon}
+%      \right]
+%    \right)
+%    [\overline{v^{\polprd}}]
+%    [\overline{v^{\polcon}}]
+%  $}
+%\end{prooftree}
+%\vspace*{0.3cm}
+%
+%\begin{minipage}{0.4\textwidth}
+%  \begin{prooftree}
+%  \scriptsize
+%    \AxiomC{$
+%      \mathcal{C}_{i}^{\polcon}\Gamma_{i}^{\polcon}
+%      \Rightarrow
+%      \Done
+%      \in
+%      \textsc{Cases}(\mathcal{D}^{\polprd})
+%    $}
+%    \RightLabel{\textsc{R-$\polprd$-Done}}
+%    \UnaryInfC{$
+%      \left(
+%        \mathcal{D}^{\polprd}
+%        \overline{v^{\polprd}}
+%        \overline{h}
+%        \mkCmd_{\mathcal{T}^{\polcon}}
+%        \mathcal{C}_{i}^{\polcon}\overline{v^{\polcon}} 
+%      \right)
+%      \reducesto_{\cmd}
+%      \Done
+%    $}
+%  \end{prooftree}
+%\end{minipage}
+%\begin{minipage}{0.4\textwidth}
+%  \begin{prooftree}
+%  \scriptsize
+%    \AxiomC{$
+%      \mathcal{C}_{i}^{\polprd}\Gamma_{i}^{\polprd}
+%      \Rightarrow
+%      \Done
+%      \in
+%      \textsc{Cases}(\mathcal{D}^{\polcon})
+%    $}
+%    \RightLabel{\textsc{R-$\polcon$-Done}}
+%    \UnaryInfC{$
+%      \left(
+%        \mathcal{C}_{i}^{\polprd}\overline{v^{\polprd}}
+%        \mkCmd_{\mathcal{T}^{\polprd}}
+%        \mathcal{D}^{\polcon}
+%        \overline{v^{\polcon}}
+%        \overline{h}
+%      \right)
+%      \reducesto_{\cmd}
+%      \Done
+%    $}
+%  \end{prooftree}
+%\end{minipage}
+%\vspace*{0.3cm}
+%
+%\begin{prooftree}
+%\scriptsize
+%  \AxiomC{}
+%  \RightLabel{\textsc{R-$\polprd$-Cap}}
+%  \UnaryInfC{$
+%    \left(
+%      ctx^{\polprd}
+%      \left[
+%          \capab\{ (x^{\polprd}, k^{\polprd}) \Rightarrow t^{\polprd} \}(v^{\polprd})
+%      \right]
+%      \mkCmd_{\mathcal{T}^{\polprd}}
+%      t^{\polcon}
+%    \right)
+%    \reducesto_{\cmd}
+%    \left(
+%      t^{\polprd}[v^{\polprd} / x^{\polprd}][(x \Rightarrow ctx^{\polprd}[x]) / k^{\polprd}]
+%      \mkCmd_{\mathcal{T}^{\polprd}}
+%      t^{\polcon}
+%    \right)
+%  $}
+%\end{prooftree}
+%\vspace*{0.3cm}
+%
+%\begin{prooftree}
+%\scriptsize
+%  \AxiomC{}
+%  \RightLabel{\textsc{R-$\polcon$-Cap}}
+%  \UnaryInfC{$
+%    \left(
+%      t^{\polprd}
+%      \mkCmd_{\mathcal{T}^{\polcon}}
+%      ctx^{\polcon}
+%      \left[
+%          \capab\{ (x^{\polcon}, k^{\polcon}) \Rightarrow t^{\polcon} \}(v^{\polcon})
+%      \right]
+%    \right)
+%    \reducesto_{\cmd}
+%    \left(
+%      t^{\polprd}
+%      \mkCmd_{\mathcal{T}^{\polcon}}
+%      t^{\polcon}[v^{\polcon} / x^{\polcon}][(x \Rightarrow ctx^{\polcon}[x]) / k^{\polcon}]
+%    \right)
+%  $}
+%\end{prooftree}
+%\vspace*{0.3cm}
+%
+%\begin{minipage}{0.45\textwidth}
+%  \begin{prooftree}
+%    \AxiomC{$s^{\polprd} \reducesto_{\polprd} t^{\polprd}$}
+%    \RightLabel{\textsc{R-$\polprd$-$\polprd$}}
+%    \UnaryInfC{$
+%      (s^{\polprd} \mkCmd_{\mathcal{T}^{\polprd}} t^{\polcon})
+%      \reducesto_{\cmd}
+%      (t^{\polprd} \mkCmd_{\mathcal{T}^{\polprd}} t^{\polcon})
+%    $}
+%  \end{prooftree}
+%\end{minipage}
+%\begin{minipage}{0.45\textwidth}
+%  \begin{prooftree}
+%    \AxiomC{$s^{\polcon} \reducesto_{\polcon} t^{\polcon}$}
+%    \RightLabel{\textsc{R-$\polprd$-$\polcon$}}
+%    \UnaryInfC{$
+%      (v^{\polprd} \mkCmd_{\mathcal{T}^{\polprd}} s^{\polcon})
+%      \reducesto_{\cmd}
+%      (v^{\polprd} \mkCmd_{\mathcal{T}^{\polprd}} t^{\polcon})
+%    $}
+%  \end{prooftree}
+%\end{minipage}
+%
+%\begin{minipage}{0.45\textwidth}
+%  \begin{prooftree}
+%    \AxiomC{$s^{\polprd} \reducesto_{\polprd} t^{\polprd}$}
+%    \RightLabel{\textsc{R-$\polcon$-$\polprd$}}
+%    \UnaryInfC{$
+%      (s^{\polprd} \mkCmd_{\mathcal{T}^{\polcon}} v^{\polcon})
+%      \reducesto_{\cmd}
+%      (t^{\polprd} \mkCmd_{\mathcal{T}^{\polcon}} v^{\polcon})
+%    $}
+%  \end{prooftree}
+%\end{minipage}
+%\begin{minipage}{0.45\textwidth}
+%  \begin{prooftree}
+%    \AxiomC{$s^{\polcon} \reducesto_{\polcon} t^{\polcon}$}
+%    \RightLabel{\textsc{R-$\polcon$-$\polcon$}}
+%    \UnaryInfC{$
+%      (t^{\polprd} \mkCmd_{\mathcal{T}^{\polcon}} s^{\polcon})
+%      \reducesto_{\cmd}
+%      (t^{\polprd} \mkCmd_{\mathcal{T}^{\polcon}} t^{\polcon})
+%    $}
+%  \end{prooftree}
+%\end{minipage}
+
+%\subsection{Adding $\mu$-Abstractions?}
+%
+%\begin{figure}[H]
+%    \setlength{\abovedisplayskip}{0pt}
+%    \setlength{\belowdisplayskip}{0pt}
+%    \setlength{\abovedisplayshortskip}{0pt}
+%    \setlength{\belowdisplayshortskip}{0pt}
+%  \[
+%    \begin{array}{lclr}
+%      % o-Terms
+%      s^{\pol},t^{\pol}
+%      & \Coloneqq
+%      & \ldots
+%      & \emph{}
+%      \\
+%      & | & \muqabsinv{x}{\mathcal{T}^{\flip{\pol}}}{c}
+%      & \emph{$\mu$-$\flip{\pol}$-abstraction}
+%      \\[0.5cm]
+%  
+%      % o-values
+%      v^{\pol}
+%      & \Coloneqq
+%      & \ldots
+%      & \emph{}
+%      \\
+%      & | & \muqabsinv{x}{\mathcal{T}^{\flip{\pol}}}{c}
+%      & \emph{$\pol$-Values}
+%      \\[0.5cm]
+%    \end{array}
+%  \]
+%  \caption{Syntax.}
+%  \label{fig:?:syntax}
+%\end{figure}
+%
+%\begin{minipage}{0.45\textwidth}
+%  \begin{prooftree}
+%    \AxiomC{$
+%      \Gamma^{\polprd}
+%      \vdash
+%      c
+%      \dashv
+%      x^{\polcon} \con \mathcal{T}^{\polcon}
+%    $}
+%    \RightLabel{\textsc{$\polprd$-$\mu$}}
+%    \UnaryInfC{$
+%      \Gamma^{\polprd}
+%      \vdash
+%      \muprdabs{x^{\polcon}}{\mathcal{T}^{\polcon}}{c}
+%      \prd
+%      \mathcal{T}^{\polcon}
+%    $}
+%  \end{prooftree}
+%\end{minipage}
+%\begin{minipage}{0.45\textwidth}
+%  \begin{prooftree}
+%    \AxiomC{$
+%      x^{\polprd} \prd \mathcal{T}^{\polprd}
+%      \vdash
+%      c
+%      \dashv
+%      \Gamma^{\polcon}
+%    $}
+%    \RightLabel{\textsc{$\polcon$-$\mu$}}
+%    \UnaryInfC{$
+%      \Gamma^{\polcon}
+%      \vdash
+%      \muconabs{x^{\polprd}}{\mathcal{T}^{\polprd}}{c}
+%      \con
+%      \mathcal{T}^{\polprd}
+%    $}
+%  \end{prooftree}
+%\end{minipage}
+%\vspace*{0.3cm}
+%
+%\begin{prooftree}
+%  \AxiomC{$
+%    \mathcal{C}^{\polcon}\Gamma^{\polcon}
+%    \in
+%    \textsc{Ctor}^{\polcon}(\mathcal{T}^{\polcon})
+%  $}
+%  \RightLabel{\textsc{R-$\polprd$-$\mu$}}
+%  \UnaryInfC{$
+%    \left(
+%      \muprdabs{x^{\polcon}}{\mathcal{T}^{\polcon}}{c}
+%      \mkCmd
+%      \mathcal{C}^{\polcon}\overline{v^{\polcon}}
+%    \right)
+%    \reducesto_{\cmd}
+%    c[\mathcal{C}^{\polcon}\overline{v^{\polcon}} / x^{\polcon}]
+%  $}
+%\end{prooftree}
+%\vspace*{0.3cm}
+%
+%\begin{prooftree}
+%  \AxiomC{$
+%    \mathcal{C}^{\polprd}\Gamma^{\polprd}
+%    \in
+%    \textsc{Ctor}^{\polprd}(\mathcal{T}^{\polprd})
+%  $}
+%  \RightLabel{\textsc{R-$\polcon$-$\mu$}}
+%  \UnaryInfC{$
+%    \left(
+%      \mathcal{C}^{\polprd}\overline{v^{\polprd}}
+%      \mkCmd
+%      \muconabs{x^{\polprd}}{\mathcal{T}^{\polprd}}{c}
+%    \right)
+%    \reducesto_{\cmd}
+%    c[\mathcal{C}^{\polprd}\overline{v^{\polprd}} / x^{\polprd}]
+%  $}
+%\end{prooftree}
+%
+%Adding the remaining $\mu$-abstractions is more involved ...
+%
+%\subsection{Soundness}
+%
+%\begin{theorem}[$\pol$-Term-Preservation]
+%  If $\vdash s^{\pol} \prdcon T$, and $s^{\pol} \reducesto_{\pol} t^{\pol}$, then $\vdash t^{\pol} \prdcon T$.
+%\end{theorem}
+%
+%\begin{theorem}[$\pol$-Term-Progress]
+%  If $\vdash s^{\pol} \prdcon T$, then either $s^{\pol}$ is a $\pol$-value, or otherwise $s^{\pol} \reducesto_{\pol} t^{\pol}$ for some $t^{\pol}$.
+%\end{theorem}
+%
+%\begin{theorem}[Command-Preservation]
+%  If $\vdash c_{1} \dashv$, and $c_{1} \reducesto_{\cmd} c_{2}$, then $\vdash c_{2} \dashv$.
+%\end{theorem}
+%
+%\begin{theorem}[Command-Progress]
+%  If $\vdash c_{1} \dashv$, then either $c_{1} = \Done$ or there exists a command $c_{2}$ such that $c_{1} \reducesto_{\cmd} c_{2}$.
+%\end{theorem}

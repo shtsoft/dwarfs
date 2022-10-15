@@ -254,7 +254,7 @@ The syntax is defined in \cref{fig:?:syntax}.
     =
     T\ \inin\ \ldots
   $}
-  \RightLabel{\textsc{Tm-$\mu$-Abs}}
+  \RightLabel{\textsc{Tm-$\mu$Abs}}
   \UnaryInfC{$
     \typetmcon{P}{\mathcal{M}}{T}
   $}
@@ -315,336 +315,148 @@ The syntax is defined in \cref{fig:?:syntax}.
 \vspace*{0.3cm}
 
 \subsection{Liveness}
+Let $\mathcal{L} \in \mu\textsc{Abs} \cup \textsc{Ctor}$ and define $\textsc{Scope}_{P}(\mathcal{L}_{e}) := \lbrace \mathcal{L} \,|\, \liveness{P}{\mathcal{L}_{e}}{\mathcal{L}} \rbrace$ where
+\\
+\begin{prooftree}
+  \AxiomC{$\mathcal{C} \neq \mathcal{C}^{\prime}$}
+  \AxiomC{$P.C[\mathcal{C}^{\prime}] = \ldots \overline{c_{\mathcal{C}^{\prime}}}$}
+  \AxiomC{$
+    \exists
+    \mathcal{D}^{i},\,
+    \mathcal{C}\text{-}\mathcal{D}^{i} \leq c_{\mathcal{C}^{\prime}}
+    \,
+    \lor
+    \,
+    \ldots
+  $}
+  \RightLabel{\textsc{Live-$\polprd$-Param}}
+  \TrinaryInfC{$\liveness{P}{\mathcal{C}}{\mathcal{C}^{\prime}}$}
+\end{prooftree}
+\vspace*{0.3cm}
 
+\begin{prooftree}
+  \AxiomC{$\mathcal{C} \neq \mathcal{C}^{\prime}$}
+  \AxiomC{$P.C[\mathcal{C}^{\prime}] = \ldots \overline{c_{\mathcal{C}^{\prime}}}$}
+  \AxiomC{$
+    \exists
+    \mathcal{D}_{i},\,
+    \mathcal{C}\text{-}\mathcal{D}_{i} \leq c_{\mathcal{C}^{\prime}}
+    \,
+    \lor
+    \,
+    \ldots
+  $}
+  \RightLabel{\textsc{Live-$\polcon$-Param}}
+  \TrinaryInfC{$\liveness{P}{\mathcal{C}}{\mathcal{C}^{\prime}}$}
+\end{prooftree}
+\vspace*{0.3cm}
 
-%\subsection{Terms}
-%
-%\begin{prooftree}
-%  \AxiomC{}
-%  \RightLabel{\textsc{Tm-$\pol$-Var}}
-%  \UnaryInfC{$
-%    \typetm
-%      {\Gamma^{\pol}, x^{\pol} \prdcon T}
-%      {\Theta^{\pol}}
-%      {x^{\pol}}
-%      {T}
-%  $}
-%\end{prooftree}
-%\vspace*{0.3cm}
-%
-%\begin{prooftree}
-%  \AxiomC{$
-%    \mathcal{C}^{\pol}\Gamma_{\mathcal{C}}^{\pol}
-%    \in
-%    \textsc{Ctor}(\mathcal{T}^{\pol})
-%  $}
-%  \AxiomC{$
-%    \forall i,\
-%    \typetm
-%      {\Gamma^{\pol}}
-%      {\Theta^{\pol}}
-%      {t_{i}^{\pol}}
-%      {\Gamma_{\mathcal{C}}^{\pol}(i)}
-%  $}
-%  \RightLabel{\textsc{Tm-$\pol$-Ctor}}
-%  \BinaryInfC{$
-%    \typetm
-%      {\Gamma^{\pol}}
-%      {\Theta^{\pol}}
-%      {\mathcal{C}^{\pol}\overline{t_{i}^{\pol}}}
-%      {\mathcal{T}^{\pol}}
-%  $}
-%\end{prooftree}
-%\vspace*{0.3cm}
-%
-%\begin{prooftree}
-%  \AxiomC{$
-%    \mathcal{D}^{\pol}\Gamma_{\mathcal{D}}^{\pol}\overline{H}
-%    \in
-%    \textsc{Dtor}(\mathcal{T}^{\flip{\pol}})
-%  $}
-%  \AxiomC{$
-%    \forall i,\
-%    \typetm
-%      {\Gamma^{\pol}}
-%      {\Theta^{\pol}}
-%      {t_{i}^{\pol}}
-%      {\Gamma_{\mathcal{D}}^{\pol}(i)}
-%  $}
-%  \AxiomC{$
-%    \overline{
-%      \typehndlr
-%        {h}
-%        {H}
-%    }
-%  $}
-%  \RightLabel{\textsc{Tm-$\pol$-Dtor}}
-%  \TrinaryInfC{$
-%    \typetm
-%      {\Gamma^{\pol}}
-%      {\Theta^{\pol}}
-%      {\mathcal{D}^{\pol}\overline{t_{i}^{\pol}}\, \overline{h}}
-%      {\mathcal{T}^{\flip{\pol}}}
-%  $}
-%\end{prooftree}
-%\vspace*{0.3cm}
-%
-%\begin{prooftree}
-%\scriptsize
-%  \AxiomC{$
-%    (\mathcal{F}^{\pol}\Gamma_{\mathcal{F}}^{\pol}\Theta_{\mathcal{F}}^{\pol}\ , T)
-%    \in
-%    \textsc{Fun}(\mathcal{T}^{\pol})
-%  $}
-%  \AxiomC{$
-%    \forall i,\
-%    \typetm
-%      {\Gamma^{\pol}}
-%      {\Theta^{\pol}}
-%      {t_{i}^{\pol}}
-%      {\Gamma_{\mathcal{F}}^{\pol}(i)}
-%  $}
-%  \AxiomC{$
-%    \forall i,\
-%    \typeblk
-%      {\Gamma^{\pol}}
-%      {\Theta^{\pol}}
-%      {b_{i}^{\pol}}
-%      {\Theta_{\mathcal{F}}^{\pol}(i)}
-%  $}
-%  \AxiomC{$
-%    \typetm
-%      {\Gamma^{\pol}}
-%      {\Theta^{\pol}}
-%      {t^{\pol}}
-%      {\mathcal{T}^{\pol}}
-%  $}
-%  \RightLabel{\textsc{Tm-$\pol$-Fun}}
-%  \QuaternaryInfC{$
-%    \typetm
-%      {\Gamma^{\pol}}
-%      {\Theta^{\pol}}
-%      {t^{\pol}\ \boxed{\pol}\ \mathcal{F}^{\pol}(\overline{t_{i}^{\pol}}, \overline{b_{i}^{\pol}})}
-%      {T}
-%  $}
-%\end{prooftree}
-%\vspace*{0.3cm}
-%
-%\begin{prooftree}
-%  \AxiomC{$
-%    \typeblk
-%      {\Gamma^{\pol}}
-%      {\Theta^{\pol}}
-%      {b^{\pol}}
-%      {(\overline{T}, \overline{B^{\pol}}) \to^{\pol} T_{0}}
-%  $}
-%  \AxiomC{$
-%    \overline{
-%      \typetm
-%        {\Gamma^{\pol}}
-%        {\Theta^{\pol}}
-%        {t^{\pol}}
-%        {T}
-%    }
-%  $}
-%  \AxiomC{$
-%    \overline{
-%      \typeblk
-%        {\Gamma^{\pol}}
-%        {\Theta^{\pol}}
-%        {b^{\pol}}
-%        {B}
-%    }
-%  $}
-%  \RightLabel{\textsc{Tm-$\pol$-Blk}}
-%  \TrinaryInfC{$
-%    \typetm
-%      {\Gamma^{\pol}}
-%      {\Theta^{\pol}}
-%      {b^{\pol}(\overline{t^{\pol}},\overline{b^{\pol}})}
-%      {T_{0}}
-%  $}
-%\end{prooftree}
-%
-%\subsection{Commands}
-%
-%\begin{prooftree}
-%  \AxiomC{$
-%    \typetmprd
-%      {\Gamma^{\polprd}}
-%      {k^{\polprd} : T_{1} \to^{\polprd} T_{2}}
-%      {t^{\polprd}}
-%      {\mathcal{T}^{\polprd}}
-%  $}
-%  \AxiomC{$
-%    \typetmcon
-%      {\Gamma^{\polcon}}
-%      {\varnothing}
-%      {t^{\polcon}}
-%      {\mathcal{T}^{\polprd}}
-%  $}
-%  \RightLabel{\textsc{Cmd-$\polprd$-Eff}}
-%  \BinaryInfC{$
-%    \typecmd
-%      {\Gamma^{\polprd}}
-%      {\Gamma^{\polcon}}
-%      {\big( k^{\polprd} \Rightarrow t^{\polprd} \big) \mkCmd_{\mathcal{T}^{\polprd}} t^{\polcon}}
-%      {T_{1} \times (T_{2} \to^{\polprd} \mathcal{T}^{\polprd})}
-%  $}
-%\end{prooftree}
-%\vspace*{0.3cm}
-%
-%\begin{prooftree}
-%  \AxiomC{$
-%    \typetmcon
-%      {\Gamma^{\polcon}}
-%      {k^{\polcon} : T_{1} \to^{\polcon} T_{2}}
-%      {t^{\polcon}}
-%      {\mathcal{T}^{\polcon}}
-%  $}
-%  \AxiomC{$
-%    \typetmprd
-%      {\Gamma^{\polprd}}
-%      {\varnothing}
-%      {t^{\polprd}}
-%      {\mathcal{T}^{\polcon}}
-%  $}
-%  \RightLabel{\textsc{Cmd-$\polcon$-Eff}}
-%  \BinaryInfC{$
-%    \typecmd
-%      {\Gamma^{\polprd}}
-%      {\Gamma^{\polcon}}
-%      {t^{\polprd} \mkCmd_{\mathcal{T}^{\polcon}} \big( k^{\polcon} \Rightarrow t^{\polcon} \big)}
-%      {T_{1} \times (T_{2} \to^{\polcon} \mathcal{T}^{\polcon})}
-%  $}
-%\end{prooftree}
-%\vspace*{0.3cm}
-%
-%\begin{prooftree}
-%  \AxiomC{}
-%  \RightLabel{\textsc{Cmd-Done}}
-%  \UnaryInfC{$
-%    \typecmd
-%      {\Gamma^{\polprd}}
-%      {\Gamma^{\polcon}}
-%      {\Done}
-%      {\Void}
-%  $}
-%\end{prooftree}
-%
-%\subsection{Well-formedness}
-%
-%\begin{prooftree}
-%  \AxiomC{$
-%    \forall i,\
-%    \typetm
-%      {\Gamma^{\pol},\Gamma_{i}^{\pol}}
-%      {\Theta^{\pol}}
-%      {t_{i}^{\pol}}
-%      {T}
-%  $}
-%  \RightLabel{\textsc{Wf-$\pol$-Fun}}
-%  \UnaryInfC{$
-%    \typewf{
-%      \define\
-%      \mathcal{T}^{\pol}\ \boxed{\pol}\ \mathcal{F}^{\pol}\Gamma^{\pol}\Theta^{\pol}
-%      \prdcon T
-%      := \match_{1}\
-%         \overline{
-%           \mathcal{C}_{i}^{\pol}\Gamma_{i}^{\pol}
-%           \Rightarrow
-%           t_{i}^{\pol}
-%         }
-%    }
-%  $}
-%\end{prooftree}
-%\vspace*{0.3cm}
-%
-%\begin{prooftree}
-%  \AxiomC{$
-%    \forall i,\
-%    \typecmd
-%      {\Gamma^{\polprd}}
-%      {\Gamma_{i}^{\polcon}}
-%      {c_{i}}
-%      {H_{i}}
-%  $}
-%  \RightLabel{\textsc{Wf-$\polprd$-Dtor}}
-%  \UnaryInfC{$
-%    \typewf{
-%      \define\
-%      \mathcal{D}^{\polprd}\Gamma^{\polprd}\overline{H_{i}} \prd \mathcal{T}^{\polcon}
-%      := \match_{2}\
-%         \overline{
-%           \mathcal{C}_{i}^{\polcon}\Gamma_{i}^{\polcon}
-%           \Rightarrow
-%           c_{i}
-%         }
-%    }
-%  $}
-%\end{prooftree}
-%\vspace*{0.3cm}
-%
-%\begin{prooftree}
-%  \AxiomC{$
-%    \forall i,\
-%    \typecmd
-%      {\Gamma_{i}^{\polprd}}
-%      {\Gamma^{\polcon}}
-%      {c_{i}}
-%      {H_{i}}
-%  $}
-%  \RightLabel{\textsc{Wf-$\polcon$-Dtor}}
-%  \UnaryInfC{$
-%    \typewf{
-%      \define\
-%      \mathcal{D}^{\polcon}\Gamma^{\polcon}\overline{H_{i}} \con \mathcal{T}^{\polprd}
-%      := \match_{2}\
-%         \overline{
-%           \mathcal{C}_{i}^{\polprd}\Gamma_{i}^{\polprd}
-%           \Rightarrow
-%           c_{i}
-%         }
-%    }
-%  $}
-%\end{prooftree}
-%\vspace*{0.3cm}
-%
-%\begin{prooftree}
-%  \AxiomC{$\typewf{\overline{fun^{\pol}}}$}
-%  \AxiomC{$\typewf{\overline{dtor^{\flip{\pol}}}}$}
-%  \RightLabel{\textsc{Wf-$\pol$-type}}
-%  \BinaryInfC{$
-%    \typewf{
-%      \pol\
-%      \type\
-%      \mathcal{T}^{\pol}\
-%      \where\
-%      \overline{\mathcal{C}_{i}^{\pol}\Gamma_{i}^{\pol}}\
-%      \with\
-%      \overline{fun^{\pol}}
-%      ++\
-%      \overline{dtor^{\flip{\pol}}}
-%    }
-%  $}
-%\end{prooftree}
-%\vspace*{0.3cm}
-%
-%\begin{minipage}{0.4\textwidth}
-%  \begin{prooftree}
-%    \AxiomC{}
-%    \RightLabel{\textsc{Wf-Prog-Nil}}
-%    \UnaryInfC{$\typewf{()}$}
-%  \end{prooftree}
-%\end{minipage}
-%\begin{minipage}{0.4\textwidth}
-%  \begi n{prooftree}
-%    \AxiomC{$\typewf{P}$}
-%    \AxiomC{$\typewf{D^{\pol}}$}
-%    \RightLabel{\textsc{Wf-Prog-$\pol$-Cons}}
-%    \BinaryInfC{$\typewf{(P,D^{\pol})}$}
-%  \end{prooftree}
-%\end{minipage}
+\begin{prooftree}
+  \AxiomC{$\mathcal{U} \neq \mathcal{U}^{\prime}$}
+  \AxiomC{$P.M[\mathcal{U}^{\prime}] = \ldots c_{\mathcal{U}^{\prime}}$}
+  \AxiomC{$
+    \exists
+    i,\,
+    \mathcal{U}^{i} \leq c_{\mathcal{U}^{\prime}}
+  $}
+  \RightLabel{\textsc{Live-$\mu$-Param}}
+  \TrinaryInfC{$\liveness{P}{\mathcal{U}}{\mathcal{U^{\prime}}}$}
+\end{prooftree}
+\vspace*{0.3cm}
+
+\begin{prooftree}
+  \AxiomC{$P.C[\mathcal{C}] = \ldots \overline{c_{\mathcal{C}}}$}
+  \AxiomC{$
+    \exists
+    i,\,
+    \mathcal{U}^{i} \leq c_{\mathcal{C}}
+    \,
+    \lor
+    \,
+    \ldots
+  $}
+  \RightLabel{\textsc{Live-$\mu$-Param-Ctor}}
+  \BinaryInfC{$\liveness{P}{\mathcal{U}}{\mathcal{C}}$}
+\end{prooftree}
+\vspace*{0.3cm}
+
+\begin{prooftree}
+  \AxiomC{$P.M[\mathcal{U}] = \ldots c_{\mathcal{U}}$}
+  \AxiomC{$
+    \exists
+    \mathcal{D}^{i},\,
+    \mathcal{C}\text{-}\mathcal{D}^{i} \leq c_{\mathcal{U}}
+  $}
+  \RightLabel{\textsc{Live-$\polprd$-Param-$\mu$Abs}}
+  \BinaryInfC{$\liveness{P}{\mathcal{C}}{\mathcal{U}}$}
+\end{prooftree}
+\vspace*{0.3cm}
+
+\begin{prooftree}
+  \AxiomC{$P.M[\mathcal{U}] = \ldots c_{\mathcal{U}}$}
+  \AxiomC{$
+    \exists
+    \mathcal{D}_{i},\,
+    \mathcal{C}\text{-}\mathcal{D}_{i} \leq c_{\mathcal{U}}
+  $}
+  \RightLabel{\textsc{Live-$\polcon$-Param-$\mu$Abs}}
+  \BinaryInfC{$\liveness{P}{\mathcal{C}}{\mathcal{U}}$}
+\end{prooftree}
+\vspace*{0.3cm}
+
+\begin{prooftree}
+  \AxiomC{$\mathcal{C} \neq \mathcal{C}^{\prime}$}
+  \AxiomC{$\liveness{P}{\mathcal{C}}{\mathcal{L}}$}
+  \AxiomC{$P.C[\mathcal{C}^{\prime}] = \ldots \overline{c_{\mathcal{C}^{\prime}}}$}
+  \AxiomC{$
+    \mathcal{L} \leq c_{\mathcal{C}^{\prime}}
+    \,
+    \lor
+    \,
+    \ldots
+  $}
+  \RightLabel{\textsc{Live-Ctor}}
+  \QuaternaryInfC{$\liveness{P}{\mathcal{C}}{\mathcal{C}^{\prime}}$}
+\end{prooftree}
+\vspace*{0.3cm}
+
+\begin{prooftree}
+  \AxiomC{$\mathcal{U} \neq \mathcal{U}^{\prime}$}
+  \AxiomC{$\liveness{P}{\mathcal{U}}{\mathcal{L}}$}
+  \AxiomC{$P.M[\mathcal{U}^{\prime}] = \ldots c_{\mathcal{U}^{\prime}}$}
+  \AxiomC{$
+    \mathcal{L} \leq c_{\mathcal{U}^{\prime}}
+  $}
+  \RightLabel{\textsc{Live-$\mu$Abs}}
+  \QuaternaryInfC{$\liveness{P}{\mathcal{U}}{\mathcal{U}^{\prime}}$}
+\end{prooftree}
+\vspace*{0.3cm}
+
+\begin{prooftree}
+  \AxiomC{$\liveness{P}{\mathcal{U}}{\mathcal{L}}$}
+  \AxiomC{$P.C[\mathcal{C}] = \ldots \overline{c_{\mathcal{C}}}$}
+  \AxiomC{$
+    \mathcal{L} \leq c_{\mathcal{C}}
+    \,
+    \lor
+    \,
+    \ldots
+  $}
+  \RightLabel{\textsc{Live-$\mu$Abs-Ctor}}
+  \TrinaryInfC{$\liveness{P}{\mathcal{U}}{\mathcal{C}}$}
+\end{prooftree}
+\vspace*{0.3cm}
+
+\begin{prooftree}
+  \AxiomC{$\liveness{P}{\mathcal{C}}{\mathcal{L}}$}
+  \AxiomC{$P.M[\mathcal{U}] = \ldots c_{\mathcal{U}}$}
+  \AxiomC{$
+    \mathcal{L} \leq c_{\mathcal{U}}
+  $}
+  \RightLabel{\textsc{Live-Ctor-$\mu$Abs}}
+  \TrinaryInfC{$\liveness{P}{\mathcal{C}}{\mathcal{U}}$}
+\end{prooftree}
+\vspace*{0.3cm}
 
 %\subsection{Operational Semantics}
 %\[

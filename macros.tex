@@ -18,6 +18,7 @@
 \newcommand{\codata}{\ensuremath{\mathbf{codata}}}
 \newcommand{\where}{\ensuremath{\mathbf{where}}}
 \newcommand{\match}{\ensuremath{\mathbf{match}}}
+\newcommand{\inin}{\ensuremath{\mathbf{in}}}
 \newcommand{\Done}{\ensuremath{\mathbf{Done}}}
 
 \newcommand*{\flip}[1]{\hat{#1}}
@@ -45,18 +46,23 @@
 \newcommand{\cmd}{\ensuremath{\mathsf{cmd}}}
 
 
-\newcommand{\typetm}[4]{
-  \ensuremath{#1\ \colmeta{|}\ #2\ \colmeta{\vdash}\ #3\ \colmeta{\prdcon}\ #4}
+\newcommand{\typetmprd}[3]{
+  \ensuremath{#1\ \colmeta{\vdash}\ #2\ \colmeta{\prd}\ #3}
 }
-\newcommand{\typecmd}[4]{
-  \ensuremath{#1\ \colmeta{\vdash}\ #3\ \colmeta{:}\ #4\ \colmeta{\dashv}\ #2}
+\newcommand{\typetmcon}[3]{
+  \ensuremath{#1\ \colmeta{\vdash}\ #2\ \colmeta{\con}\ #3}
+}
+\newcommand{\typecmd}[2]{
+  \ensuremath{#1\ \colmeta{\vdash}\ #2\ \colmeta{:}}
 }
 \newcommand{\typewf}[1]{
   \ensuremath{\colmeta{\vdash}\ #1\ \colmeta{\text{Ok}}}
 }
+\newcommand{\liveness}[3]{
+  \ensuremath{#1\ \colmeta{\vdash}\ #2\ \colmeta{\text{live}}\ #3}
+}
 
 \newcommand{\muconabs}[3]{\ensuremath{\mu(#1 \prd #2).#3}}
-\newcommand{\muqabs}[3]{\ensuremath{\mu(#1 \overset{o}{:} #2).#3}}
 
 % Programming-Commands
 \newcommand{\FunXY}{\colcon{\textsc{Fun}}XY}

@@ -28,7 +28,7 @@ The syntax is defined in \cref{fig:?:syntax}.
     \multicolumn{4}{r}{
       i \in \mathbb{N}
       \quad
-      \mathcal{U} \in \mu\textsc{Abs}
+      \mathcal{M} \in \mu\textsc{Abs}
       \quad
       \mathcal{C} \in \textsc{Ctor}
       \quad
@@ -72,7 +72,7 @@ The syntax is defined in \cref{fig:?:syntax}.
     & | & \mathcal{C}\text{-}\mathcal{D}^{i}
     & \emph{$\polprd$-Parameter}
     \\
-    & | & \mathcal{U}^{i}
+    & | & \mathcal{M}^{i}
     & \emph{$\mu$-Parameter}
     \\[0.5cm]
 
@@ -82,10 +82,10 @@ The syntax is defined in \cref{fig:?:syntax}.
     & \mathcal{C}\text{-}\mathcal{D}_{i}
     & \emph{$\polcon$-Parameter}
     \\
-    & | & \mathcal{D}\big(\overline{t^{\polprd}}\big)\big[\overline{t^{\polcon}}\big]
+    & | & \mathcal{D}\big(\overline{t^{\polprd}}\big)\big(\overline{t^{\polcon}}\big)
     & \emph{Destructor-Application}
     \\
-    & | & \mathcal{U}
+    & | & \mathcal{M}
     & \emph{$\mu$-Abstraction}
     \\[0.5cm]
 
@@ -96,27 +96,33 @@ The syntax is defined in \cref{fig:?:syntax}.
     & \emph{Command}
     \\[0.5cm]
 
-    % Codata Declarations
-    D
+    % Constructor-Definition
+    C
     & \Coloneqq
-    & \codata\
+    & \textsc{Ctor} \to \codata\
       \mathcal{T}\
       \where\
       \overline{\mathcal{D}\Sigma^{\polprd}\Sigma^{\polcon}}\
-    & \emph{Codata Declaration}
+      := \match\
+         \overline{c}
+    & \emph{Constructor-Definitions}
     \\[0.5cm]
 
-    % Programs
+    % mu-Definition
+    M
+    & \Coloneqq
+    & \mu\textsc{Abs} \to T\ \inin\ c
+    & \emph{$\mu$-Definitions}
+    \\[0.5cm]
+
+    % Program
     P
     & \Coloneqq
-    & \textsc{Ctor} \to D
-      := \match\
-         \overline{\mathcal{D} \Rightarrow c}
-      \quad
-      \&\&
-      \quad
-      \mu\textsc{Abs} \to c
-    & \emph{Programs}
+    & 
+      C
+      \ \&\
+      M
+    & \emph{Program}
     \\[0.5cm]
 
     % prd-Values
@@ -133,7 +139,7 @@ The syntax is defined in \cref{fig:?:syntax}.
     v^{\polcon}
     & \Coloneqq
     & \Done
-    & \emph{Top-Level Consumer}
+    & \emph{Top-Level-Consumer}
     \\[0.5cm]
   \end{array}
   \]
@@ -141,9 +147,172 @@ The syntax is defined in \cref{fig:?:syntax}.
   \label{fig:?:syntax}
 \end{figure}
 
-\subsection{Semantics}
+\subsection{Semantic}
 
 \subsection{Typing}
+
+\begin{prooftree}
+  \AxiomC{$
+    T
+    =
+    \text{check}_{\otimes}\big(\overline{t^{\polprd}}\big)
+  $}
+  \RightLabel{\textsc{Tm-PrimOpApp}}
+  \UnaryInfC{$
+    \typetmprd{P}{\otimes\big(\overline{t^{\polprd}}\big)}{T}
+  $}
+\end{prooftree}
+\vspace*{0.3cm}
+
+\begin{prooftree}
+  \AxiomC{$
+    P.C[\mathcal{C}]
+    =
+    \codata\ \mathcal{T} \ldots
+  $}
+  \RightLabel{\textsc{Tm-Ctor}}
+  \UnaryInfC{$
+    \typetmprd{P}{\mathcal{C}}{\mathcal{T}}
+  $}
+\end{prooftree}
+\vspace*{0.3cm}
+
+\begin{prooftree}
+  \AxiomC{$
+    P.C[\mathcal{C}]
+    =
+    \ldots \where \ldots \mathcal{D}\Sigma^{\polprd}\Sigma^{\polcon} \ldots
+  $}
+  \AxiomC{$
+    T
+    =
+    \Sigma^{\polprd}(i)
+  $}
+  \RightLabel{\textsc{Tm-$\polprd$-Param}}
+  \BinaryInfC{$
+    \typetmprd{P}{\mathcal{C}\text{-}\mathcal{D}^{i}}{T}
+  $}
+\end{prooftree}
+\vspace*{0.3cm}
+
+\begin{prooftree}
+  \AxiomC{$
+    P.M[\mathcal{M}]
+    =
+    T\ \inin\ \ldots
+  $}
+  \RightLabel{\textsc{Tm-$\mu$-Param}}
+  \UnaryInfC{$
+    \typetmprd{P}{\mathcal{M}^{i}}{T}
+  $}
+\end{prooftree}
+\vspace*{0.3cm}
+
+\begin{prooftree}
+  \AxiomC{$
+    P.C[\mathcal{C}]
+    =
+    \ldots \where \ldots \mathcal{D}\Sigma^{\polprd}\Sigma^{\polcon} \ldots
+  $}
+  \AxiomC{$
+    T
+    =
+    \Sigma^{\polcon}(i)
+  $}
+  \RightLabel{\textsc{Tm-$\polcon$-Param}}
+  \BinaryInfC{$
+    \typetmcon{P}{\mathcal{C}\text{-}\mathcal{D}_{i}}{T}
+  $}
+\end{prooftree}
+\vspace*{0.3cm}
+
+\begin{prooftree}
+  \AxiomC{$
+    (\Sigma^{\polprd}, \Sigma^{\polcon})
+    =
+    \text{Sig}(\mathcal{D}, \mathcal{T}, P)
+  $}
+  \AxiomC{$
+    \forall i,\, \typetmprd{P}{t_{i}^{\polprd}}{\Sigma^{\polprd}(i)}
+  $}
+  \AxiomC{$
+    \forall i,\, \typetmcon{P}{t_{i}^{\polcon}}{\Sigma^{\polcon}(i)}
+  $}
+  \RightLabel{\textsc{Tm-Dtor-App}}
+  \TrinaryInfC{$
+    \typetmcon
+      {P}
+      {\mathcal{D}\big(\overline{t^{\polprd}}\big)\big(\overline{t^{\polcon}}\big)}
+      {\mathcal{T}}
+  $}
+\end{prooftree}
+\vspace*{0.3cm}
+
+\begin{prooftree}
+  \AxiomC{$
+    P.M[\mathcal{M}]
+    =
+    T\ \inin\ \ldots
+  $}
+  \RightLabel{\textsc{Tm-$\mu$-Abs}}
+  \UnaryInfC{$
+    \typetmcon{P}{\mathcal{M}}{T}
+  $}
+\end{prooftree}
+\vspace*{0.3cm}
+
+\begin{prooftree}
+  \AxiomC{$
+    \typetmprd{P}{t^{\polprd}}{T}
+  $}
+  \AxiomC{$
+    \typetmcon{P}{t^{\polcon}}{T}
+  $}
+  \RightLabel{\textsc{Cmd-Cut}}
+  \BinaryInfC{$
+    \typecmd{P}{t^{\polprd} \mkCmd t^{\polcon}}
+  $}
+\end{prooftree}
+\vspace*{0.3cm}
+
+\begin{prooftree}
+  \AxiomC{$\forall \mathcal{C},\, \overline{\typecmd{P}{c}}$}
+  \RightLabel{\textsc{Wf-Ctor}}
+  \UnaryInfC{$
+    \typewf{
+      \textsc{Ctor}
+      \to
+      \codata\
+      \mathcal{T}\
+      \where\
+      \overline{\mathcal{D}\Sigma^{\polprd}\Sigma^{\polcon}}\
+      := \match\
+         \overline{c}
+    }
+  $}
+\end{prooftree}
+\vspace*{0.3cm}
+
+\begin{prooftree}
+  \AxiomC{$\typecmd{P}{c}$}
+  \RightLabel{\textsc{Wf-$\mu$}}
+  \UnaryInfC{$
+    \typewf{
+      \mu\textsc{Abs}
+      \to
+      T\ \inin\ c
+    }
+  $}
+\end{prooftree}
+\vspace*{0.3cm}
+
+\begin{prooftree}
+  \AxiomC{$\typewf{C}$}
+  \AxiomC{$\typewf{M}$}
+  \RightLabel{\textsc{Wf-Program}}
+  \BinaryInfC{$\typewf{C\ \&\ M}$}
+\end{prooftree}
+\vspace*{0.3cm}
 
 \subsection{Liveness}
 
@@ -469,7 +638,7 @@ The syntax is defined in \cref{fig:?:syntax}.
 %  \end{prooftree}
 %\end{minipage}
 %\begin{minipage}{0.4\textwidth}
-%  \begin{prooftree}
+%  \begi n{prooftree}
 %    \AxiomC{$\typewf{P}$}
 %    \AxiomC{$\typewf{D^{\pol}}$}
 %    \RightLabel{\textsc{Wf-Prog-$\pol$-Cons}}

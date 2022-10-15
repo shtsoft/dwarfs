@@ -1,3 +1,6 @@
+%TODO remove parentheses around parameter lists: $\otimes$ and $\mathcal{D}$
+%TODO add abstract machine semantics
+
 In the formalization of the language we use an orientation parameter $\pol \in \{ \polprd,\polcon \}$ and functions
 
 \begin{align*}
@@ -140,6 +143,12 @@ The syntax is defined in \cref{fig:?:syntax}.
     & \Coloneqq
     & \Done
     & \emph{Top-Level-Consumer}
+    \\
+    & | & \mathcal{D}\big(\overline{v^{\polprd}}\big)\big(\overline{v^{\polcon}}\big)
+    & \emph{Observation}
+    \\
+    & | & \langle \mathcal{M}, \sigma \rangle
+    & \emph{Continuation}
     \\[0.5cm]
   \end{array}
   \]
@@ -148,6 +157,253 @@ The syntax is defined in \cref{fig:?:syntax}.
 \end{figure}
 
 \subsection{Semantic}
+Define environments $\sigma$ as records
+\begin{align*}
+  \left\lbrace
+    C:
+      \textsc{Ctor}
+      \to
+      \text{List}
+      \left(
+        \left(
+          V^{\polprd} \times \ldots \times V^{\polprd}
+        \right),
+        \left(
+          V^{\polcon} \times \ldots \times V^{\polcon}
+        \right)
+      \right);
+    M: \mu\textsc{Abs} \to V^{\polprd}
+  \right\rbrace
+  \\
+\end{align*}
+
+\begin{prooftree}
+  \AxiomC{$
+    P.C[\mathcal{C}].\mathcal{D}
+    =
+    t^{\polprd} \mkCmd t^{\polcon}
+  $}
+  \AxiomC{$
+    \semtm{\sigma}{t^{\polprd}}{\langle \mathcal{C}^{\prime}, \sigma^{\prime} \rangle}
+  $}
+  \AxiomC{$
+    \semtm
+      {\sigma}
+      {t^{\polcon}}
+      {\mathcal{D}\big(\overline{v^{\polprd}}\big)\big(\overline{v^{\polcon}}\big)}
+  $}
+  \RightLabel{\textsc{E-Cmd-Ctor}}
+  \TrinaryInfC{$
+    \semcmd
+      {P}
+      {\sigma}
+      {\mathcal{C}}
+      {
+        \sigma^{\prime}
+        \left[
+          \overline{\mathcal{C}\mathcal{D}^{i} \mapsto v_{i}^{\polprd}},
+          \overline{\mathcal{C}\mathcal{D}_{i} \mapsto v_{i}^{\polcon}}
+        \right]
+      }
+      {\mathcal{C}^{\prime}}
+  $}
+\end{prooftree}
+\vspace*{0.3cm}
+
+\begin{prooftree}
+  \AxiomC{$
+    P.M[\mathcal{M}]
+    =
+    \ldots
+    t^{\polprd} \mkCmd t^{\polcon}
+  $}
+  \AxiomC{$
+    \semtm{\sigma}{t^{\polprd}}{v^{\polprd}}
+  $}
+  \AxiomC{$
+    \semtm{\sigma}{t^{\polcon}}{\langle \mathcal{M}^{\prime}, \sigma^{\prime} \rangle}
+  $}
+  \RightLabel{\textsc{E-Cmd-$\mu$Abs}}
+  \TrinaryInfC{$
+    \semcmd
+      {P}
+      {\sigma}
+      {\mathcal{M}}
+      {\sigma^{\prime}[\mathcal{M}^{i} \mapsto v^{\polprd}]}
+      {\mathcal{M}^{\prime}}
+  $}
+\end{prooftree}
+\vspace*{0.3cm}
+
+\begin{prooftree}
+  \AxiomC{$
+    P.C[\mathcal{C}].\mathcal{D}
+    =
+    t^{\polprd} \mkCmd t^{\polcon}
+  $}
+  \AxiomC{$
+    \semtm{\sigma}{t^{\polprd}}{v^{\polprd}}
+  $}
+  \AxiomC{$
+    \semtm{\sigma}{t^{\polcon}}{\langle \mathcal{M}^{\prime}, \sigma^{\prime} \rangle}
+  $}
+  \RightLabel{\textsc{E-Cmd-Ctor-$\mu$Abs}}
+  \TrinaryInfC{$
+    \semcmd
+      {P}
+      {\sigma}
+      {\mathcal{C}}
+      {\sigma^{\prime}[\mathcal{M}^{i} \mapsto v^{\polprd}]}
+      {\mathcal{M}}
+  $}
+\end{prooftree}
+\vspace*{0.3cm}
+
+\begin{prooftree}
+  \AxiomC{$
+    P.M[\mathcal{M}]
+    =
+    \ldots
+    t^{\polprd} \mkCmd t^{\polcon}
+  $}
+  \AxiomC{$
+    \semtm{\sigma}{t^{\polprd}}{\langle \mathcal{C}, \sigma^{\prime} \rangle}
+  $}
+  \AxiomC{$
+    \semtm
+      {\sigma}
+      {t^{\polcon}}
+      {\mathcal{D}\big(\overline{v^{\polprd}}\big)\big(\overline{v^{\polcon}}\big)}
+  $}
+  \RightLabel{\textsc{E-Cmd-$\mu$Abs-Ctor}}
+  \TrinaryInfC{$
+    \semcmd
+      {P}
+      {\sigma}
+      {\mathcal{M}}
+      {
+        \sigma^{\prime}
+        \left[
+          \overline{\mathcal{C}\mathcal{D}^{i} \mapsto v_{i}^{\polprd}},
+          \overline{\mathcal{C}\mathcal{D}_{i} \mapsto v_{i}^{\polcon}}
+        \right]
+      }
+      {\mathcal{C}}
+  $}
+\end{prooftree}
+\vspace*{0.3cm}
+
+\begin{prooftree}
+  \AxiomC{$
+    \overline{\semtm{\sigma}{t^{\polprd}}{v^{\polprd}}}
+  $}
+  \RightLabel{\textsc{E-PrimOpApp}}
+  \UnaryInfC{$
+    \semtm
+      {\sigma}
+      {\otimes\big(\overline{t^{\polprd}}\big)}
+      {\tilde{\otimes}\big(\overline{v^{\polprd}}\big)}
+  $}
+\end{prooftree}
+\vspace*{0.3cm}
+
+\begin{prooftree}
+  \AxiomC{$
+    \text{lookup}(\sigma.C[\mathcal{C}], \mathcal{D})
+    =
+    \left(
+      \left(
+        \ldots,
+        v_{i}^{\polprd},
+        \ldots
+      \right),
+      \left(
+        \ldots
+      \right)
+    \right)
+  $}
+  \RightLabel{\textsc{E-$\polprd$-Param}}
+  \UnaryInfC{$
+    \semtm{\sigma}{\mathcal{C}\text{-}\mathcal{D}^{i}}{v_{i}^{\polprd}}
+  $}
+\end{prooftree}
+\vspace*{0.3cm}
+
+\begin{prooftree}
+  \AxiomC{}
+  \RightLabel{\textsc{E-Ctor}}
+  \UnaryInfC{$
+    \semtm
+      {\sigma}
+      {\mathcal{C}}
+      {\langle \mathcal{C}, \sigma \rangle}
+  $}
+\end{prooftree}
+\vspace*{0.3cm}
+
+\begin{prooftree}
+  \AxiomC{$
+    \sigma.M[\mathcal{M}]
+    =
+    v^{\polprd}
+  $}
+  \RightLabel{\textsc{E-$\mu$-Param}}
+  \UnaryInfC{$
+    \semtm{\sigma}{\mathcal{M}_{i}}{v^{\polprd}}
+  $}
+\end{prooftree}
+\vspace*{0.3cm}
+
+\begin{prooftree}
+  \AxiomC{$
+    \text{lookup}(\sigma.C[\mathcal{C}], \mathcal{D})
+    =
+    \left(
+      \left(
+        \ldots
+      \right),
+      \left(
+        \ldots,
+        v_{i}^{\polcon},
+        \ldots
+      \right)
+    \right)
+  $}
+  \RightLabel{\textsc{E-$\polcon$-Param}}
+  \UnaryInfC{$
+    \semtm{\sigma}{\mathcal{C}\text{-}\mathcal{D}_{i}}{v_{i}^{\polprd}}
+  $}
+\end{prooftree}
+\vspace*{0.3cm}
+
+\begin{prooftree}
+  \AxiomC{$
+    \overline{\semtm{\sigma}{t^{\polprd}}{v^{\polprd}}}
+  $}
+  \AxiomC{$
+    \overline{\semtm{\sigma}{t^{\polcon}}{v^{\polcon}}}
+  $}
+  \RightLabel{\textsc{E-DtorApp}}
+  \BinaryInfC{$
+    \semtm
+      {\sigma}
+      {\mathcal{D}\big(\overline{t^{\polprd}}\big)\big(\overline{t^{\polcon}}\big)}
+      {\mathcal{D}\big(\overline{v^{\polprd}}\big)\big(\overline{v^{\polcon}}\big)}
+  $}
+\end{prooftree}
+\vspace*{0.3cm}
+
+\begin{prooftree}
+  \AxiomC{}
+  \RightLabel{\textsc{E-$\mu$Abs}}
+  \UnaryInfC{$
+    \semtm
+      {\sigma}
+      {\mathcal{M}}
+      {\langle \mathcal{M}, \sigma \rangle}
+  $}
+\end{prooftree}
+\vspace*{0.3cm}
 
 \subsection{Typing}
 
@@ -238,7 +494,7 @@ The syntax is defined in \cref{fig:?:syntax}.
   \AxiomC{$
     \forall i,\, \typetmcon{P}{t_{i}^{\polcon}}{\Sigma^{\polcon}(i)}
   $}
-  \RightLabel{\textsc{Tm-Dtor-App}}
+  \RightLabel{\textsc{Tm-DtorApp}}
   \TrinaryInfC{$
     \typetmcon
       {P}

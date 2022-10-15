@@ -45,7 +45,21 @@
 
 \newcommand{\cmd}{\ensuremath{\mathsf{cmd}}}
 
-
+\newcommand{\semam}[2]{
+  \ensuremath{\colmeta{\big\langle}#1\ \colmeta{\big\vert\big\vert}\ #2\ \colmeta{\big\rangle}}
+}
+\newcommand{\semcmd}[5]{
+  \ensuremath{
+    #1\
+    \colmeta{\vdash}\
+    \colmeta{\big\langle}#2\,\colmeta{\big\vert}\, #3\colmeta{\big\rangle}\
+    \colmeta{\triangleright}\
+    \colmeta{\big\langle}#4\,\colmeta{\big\vert}\, #5\colmeta{\big\rangle}
+  }
+}
+\newcommand{\semtm}[3]{
+  \ensuremath{#1\ \colmeta{\vdash}\ #2\ \colmeta{\triangleright}\ #3}
+}
 \newcommand{\typetmprd}[3]{
   \ensuremath{#1\ \colmeta{\vdash}\ #2\ \colmeta{\prd}\ #3}
 }

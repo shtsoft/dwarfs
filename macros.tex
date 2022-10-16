@@ -45,14 +45,22 @@
 
 \newcommand{\cmd}{\ensuremath{\mathsf{cmd}}}
 
-\newcommand{\semcmd}[5]{
+\newcommand{\stateprd}[3]{
   \ensuremath{
-    #1\
-    \colmeta{\vdash}\
-    \colmeta{\big\langle}#2\,\colmeta{\big\vert}\, #3\colmeta{\big\rangle}\
-    \colmeta{\vartriangleright}\
-    \colmeta{\big\langle}#4\,\colmeta{\big\vert}\, #5\colmeta{\big\rangle}
+    \colmeta{\big\langle}
+    #1\,\colmeta{\big\vert}\, #2\,\colmeta{\%}\, #3
+    \colmeta{\big\rangle}
   }
+}
+\newcommand{\statecon}[2]{
+  \ensuremath{
+    \colmeta{\big\langle}
+    #1\,\colmeta{\big\vert}\, #2
+    \colmeta{\big\rangle}
+  }
+}
+\newcommand{\semcmd}[3]{
+  \ensuremath{#1\ \colmeta{\vdash}\ #2\ \colmeta{\vartriangleright}\ #3}
 }
 \newcommand{\semtm}[3]{
   \ensuremath{#1\ \colmeta{\vdash}\ #2\ \colmeta{\triangleright}\ #3}

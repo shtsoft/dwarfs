@@ -38,12 +38,6 @@ The syntax is defined in \cref{fig:?:syntax}.
       \mspace{60mu}
       \emph{Names}
     }
-    \\
-    \multicolumn{4}{r}{
-      a \in \textsc{Literal}
-      \mspace{60mu}
-      \emph{Constants}
-    }
     \\[0.5cm]
 
     % Types
@@ -124,6 +118,43 @@ The syntax is defined in \cref{fig:?:syntax}.
       M
     & \emph{Program}
     \\[0.5cm]
+  \end{array}
+  \]
+  \caption{Syntax.}
+  \label{fig:?:syntax}
+\end{figure}
+
+\subsection{Semantic}
+Define environments $\sigma$ as records
+
+\begin{align*}
+  \left\lbrace
+    C:
+      \textsc{Ctor}
+      \to
+      \text{List}
+      \left(
+        \left(
+          V^{\polprd} \times \ldots \times V^{\polprd}
+        \right),
+        \left(
+          V^{\polcon} \times \ldots \times V^{\polcon}
+        \right)
+      \right);
+    M: \mu\textsc{Abs} \to V^{\polprd}
+  \right\rbrace
+\end{align*}
+
+mutually recursive with
+
+\[
+  \begin{array}{lclr}
+    \multicolumn{4}{r}{
+      a \in \textsc{Literal}
+      \mspace{60mu}
+      \emph{Constants}
+    }
+    \\[0.5cm]
 
     % prd-Values
     v^{\polprd}
@@ -148,35 +179,11 @@ The syntax is defined in \cref{fig:?:syntax}.
     & \emph{Continuation}
     \\[0.5cm]
   \end{array}
-  \]
-  \caption{Syntax.}
-  \label{fig:?:syntax}
-\end{figure}
-
-\subsection{Semantic}
-Define environments $\sigma$ as records
-\begin{align*}
-  \left\lbrace
-    C:
-      \textsc{Ctor}
-      \to
-      \text{List}
-      \left(
-        \left(
-          V^{\polprd} \times \ldots \times V^{\polprd}
-        \right),
-        \left(
-          V^{\polcon} \times \ldots \times V^{\polcon}
-        \right)
-      \right);
-    M: \mu\textsc{Abs} \to V^{\polprd}
-  \right\rbrace
-  \\
-\end{align*}
+\]
 
 \begin{prooftree}
   \AxiomC{$
-    P.C[\mathcal{C}].\mathcal{D}
+    \text{Cmd}(P.C[\mathcal{C}], \mathcal{D})
     =
     t^{\polprd} \mkCmd t^{\polcon}
   $}
@@ -187,22 +194,25 @@ Define environments $\sigma$ as records
     \semtm
       {\sigma}
       {t^{\polcon}}
-      {\mathcal{D}\ \overline{v^{\polprd}}\ \overline{v^{\polcon}}}
+      {\mathcal{D}^{\prime}\ \overline{v^{\polprd}}\ \overline{v^{\polcon}}}
   $}
   \RightLabel{\textsc{E-Cmd-Ctor}}
   \TrinaryInfC{$
     \semcmd
       {P}
-      {\sigma}
-      {\mathcal{C}}
+      {\stateprd{\sigma}{\mathcal{C}}{\mathcal{D}}}
       {
-        \sigma^{\prime}
-        \left[
-          \overline{\mathcal{C}\mathcal{D}^{i} \mapsto v_{i}^{\polprd}},
-          \overline{\mathcal{C}\mathcal{D}_{i} \mapsto v_{i}^{\polcon}}
-        \right]
+        \stateprd
+        {
+          \sigma^{\prime}
+          \left[
+            \overline{\mathcal{C}^{\prime}\text{-}\mathcal{D}^{\prime i} \mapsto v_{i}^{\polprd}},
+            \overline{\mathcal{C}^{\prime}\text{-}\mathcal{D}^{\prime}_{i} \mapsto v_{i}^{\polcon}}
+          \right]
+        }
+        {\mathcal{C}^{\prime}}
+        {\mathcal{D}^{\prime}}
       }
-      {\mathcal{C}^{\prime}}
   $}
 \end{prooftree}
 \vspace*{0.3cm}
@@ -224,17 +234,15 @@ Define environments $\sigma$ as records
   \TrinaryInfC{$
     \semcmd
       {P}
-      {\sigma}
-      {\mathcal{M}}
-      {\sigma^{\prime}[\mathcal{M}^{i} \mapsto v^{\polprd}]}
-      {\mathcal{M}^{\prime}}
+      {\statecon{\sigma}{\mathcal{M}}}
+      {\statecon{\sigma^{\prime}[\mathcal{M}^{i} \mapsto v^{\polprd}]}{\mathcal{M}^{\prime}}}
   $}
 \end{prooftree}
 \vspace*{0.3cm}
 
 \begin{prooftree}
   \AxiomC{$
-    P.C[\mathcal{C}].\mathcal{D}
+    \text{Cmd}(P.C[\mathcal{C}], \mathcal{D})
     =
     t^{\polprd} \mkCmd t^{\polcon}
   $}
@@ -248,10 +256,8 @@ Define environments $\sigma$ as records
   \TrinaryInfC{$
     \semcmd
       {P}
-      {\sigma}
-      {\mathcal{C}}
-      {\sigma^{\prime}[\mathcal{M}^{i} \mapsto v^{\polprd}]}
-      {\mathcal{M}}
+      {\stateprd{\sigma}{\mathcal{C}}{\mathcal{D}}}
+      {\statecon{\sigma^{\prime}[\mathcal{M}^{i} \mapsto v^{\polprd}]}{\mathcal{M}}}
   $}
 \end{prooftree}
 \vspace*{0.3cm}
@@ -276,16 +282,18 @@ Define environments $\sigma$ as records
   \TrinaryInfC{$
     \semcmd
       {P}
-      {\sigma}
-      {\mathcal{M}}
-      {
-        \sigma^{\prime}
-        \left[
-          \overline{\mathcal{C}\mathcal{D}^{i} \mapsto v_{i}^{\polprd}},
-          \overline{\mathcal{C}\mathcal{D}_{i} \mapsto v_{i}^{\polcon}}
-        \right]
+      {\statecon{\sigma}{\mathcal{M}}}
+      {\stateprd
+        {
+          \sigma^{\prime}
+          \left[
+            \overline{\mathcal{C}\text{-}\mathcal{D}^{i} \mapsto v_{i}^{\polprd}},
+            \overline{\mathcal{C}\text{-}\mathcal{D}_{i} \mapsto v_{i}^{\polcon}}
+          \right]
+        }
+        {\mathcal{C}}
+        {\mathcal{D}}
       }
-      {\mathcal{C}}
   $}
 \end{prooftree}
 \vspace*{0.3cm}
@@ -294,7 +302,7 @@ Define environments $\sigma$ as records
   \AxiomC{$
     \overline{\semtm{\sigma}{t^{\polprd}}{v^{\polprd}}}
   $}
-  \RightLabel{\textsc{E-PrimOpApp}}
+  \RightLabel{\textsc{E-Tm-PrimOpApp}}
   \UnaryInfC{$
     \semtm
       {\sigma}
@@ -319,7 +327,7 @@ Define environments $\sigma$ as records
       \right)
     \right)
   $}
-  \RightLabel{\textsc{E-$\polprd$-Param}}
+  \RightLabel{\textsc{E-Tm-$\polprd$-Param}}
   \UnaryInfC{$
     \semtm{\sigma}{\mathcal{C}\text{-}\mathcal{D}^{i}}{v_{i}^{\polprd}}
   $}
@@ -328,7 +336,7 @@ Define environments $\sigma$ as records
 
 \begin{prooftree}
   \AxiomC{}
-  \RightLabel{\textsc{E-Ctor}}
+  \RightLabel{\textsc{E-Tm-Ctor}}
   \UnaryInfC{$
     \semtm
       {\sigma}
@@ -344,7 +352,7 @@ Define environments $\sigma$ as records
     =
     v^{\polprd}
   $}
-  \RightLabel{\textsc{E-$\mu$-Param}}
+  \RightLabel{\textsc{E-Tm-$\mu$-Param}}
   \UnaryInfC{$
     \semtm{\sigma}{\mathcal{M}_{i}}{v^{\polprd}}
   $}
@@ -366,7 +374,7 @@ Define environments $\sigma$ as records
       \right)
     \right)
   $}
-  \RightLabel{\textsc{E-$\polcon$-Param}}
+  \RightLabel{\textsc{E-Tm-$\polcon$-Param}}
   \UnaryInfC{$
     \semtm{\sigma}{\mathcal{C}\text{-}\mathcal{D}_{i}}{v_{i}^{\polprd}}
   $}
@@ -380,7 +388,7 @@ Define environments $\sigma$ as records
   \AxiomC{$
     \overline{\semtm{\sigma}{t^{\polcon}}{v^{\polcon}}}
   $}
-  \RightLabel{\textsc{E-DtorApp}}
+  \RightLabel{\textsc{E-Tm-DtorApp}}
   \BinaryInfC{$
     \semtm
       {\sigma}
@@ -392,7 +400,7 @@ Define environments $\sigma$ as records
 
 \begin{prooftree}
   \AxiomC{}
-  \RightLabel{\textsc{E-$\mu$Abs}}
+  \RightLabel{\textsc{E-Tm-$\mu$Abs}}
   \UnaryInfC{$
     \semtm
       {\sigma}
@@ -596,7 +604,7 @@ Let $\mathcal{L} \in \mu\textsc{Abs} \cup \textsc{Ctor}$ and define $\textsc{Sco
     \mathcal{M}^{i} \leq c_{\mathcal{M}^{\prime}}
   $}
   \RightLabel{\textsc{Live-$\mu$-Param}}
-  \TrinaryInfC{$\liveness{P}{\mathcal{M}}{\mathcal{U^{\prime}}}$}
+  \TrinaryInfC{$\liveness{P}{\mathcal{M}}{\mathcal{C}^{\prime}}$}
 \end{prooftree}
 \vspace*{0.3cm}
 

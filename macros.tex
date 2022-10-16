@@ -45,15 +45,12 @@
 
 \newcommand{\cmd}{\ensuremath{\mathsf{cmd}}}
 
-\newcommand{\semam}[2]{
-  \ensuremath{\colmeta{\big\langle}#1\ \colmeta{\big\vert\big\vert}\ #2\ \colmeta{\big\rangle}}
-}
 \newcommand{\semcmd}[5]{
   \ensuremath{
     #1\
     \colmeta{\vdash}\
     \colmeta{\big\langle}#2\,\colmeta{\big\vert}\, #3\colmeta{\big\rangle}\
-    \colmeta{\triangleright}\
+    \colmeta{\vartriangleright}\
     \colmeta{\big\langle}#4\,\colmeta{\big\vert}\, #5\colmeta{\big\rangle}
   }
 }
@@ -67,7 +64,7 @@
   \ensuremath{#1\ \colmeta{\vdash}\ #2\ \colmeta{\con}\ #3}
 }
 \newcommand{\typecmd}[2]{
-  \ensuremath{#1\ \colmeta{\vdash}\ #2\ \colmeta{:}}
+  \ensuremath{#1\ \colmeta{\vdash}\ #2}
 }
 \newcommand{\typewf}[1]{
   \ensuremath{\colmeta{\vdash}\ #1\ \colmeta{\text{Ok}}}
@@ -76,9 +73,9 @@
   \ensuremath{#1\ \colmeta{\vdash}\ #2\ \colmeta{\text{live}}\ #3}
 }
 
+% Programming-Commands
 \newcommand{\muconabs}[3]{\ensuremath{\mu(#1 \prd #2).#3}}
 
-% Programming-Commands
 \newcommand{\FunXY}{\colcon{\textsc{Fun}}XY}
 \newcommand{\FunXX}{\colcon{\textsc{Fun}}XX}
 \newcommand{\Apply}{\colcon{\text{Apply}}}

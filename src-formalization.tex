@@ -1,14 +1,11 @@
-%TODO remove parentheses around parameter lists: $\otimes$ and $\mathcal{D}$
-%TODO add abstract machine semantics
-
 In the formalization of the language we use an orientation parameter $\pol \in \{ \polprd,\polcon \}$ and functions
 
 \begin{align*}
   \boxed{\polprd}
-  :=\ >
+  :=\ ^{i}
   \quad
   \boxed{\polcon}
-  :=\ <
+  :=\ _i
   \qquad
   \widehat{\polprd}
   :=\ \polcon
@@ -43,9 +40,9 @@ The syntax is defined in \cref{fig:?:syntax}.
     }
     \\
     \multicolumn{4}{r}{
-      a \in \textsc{Contants}
+      a \in \textsc{Literal}
       \mspace{60mu}
-      \emph{Values}
+      \emph{Constants}
     }
     \\[0.5cm]
 
@@ -66,7 +63,7 @@ The syntax is defined in \cref{fig:?:syntax}.
     % prd-Terms
     t^{\polprd}
     & \Coloneqq
-    & \otimes\big(\overline{t^{\polprd}}\big)
+    & \otimes\ \overline{t^{\polprd}}
     & \emph{Primitive-Operator-Application}
     \\
     & | & \mathcal{C}
@@ -85,7 +82,7 @@ The syntax is defined in \cref{fig:?:syntax}.
     & \mathcal{C}\text{-}\mathcal{D}_{i}
     & \emph{$\polcon$-Parameter}
     \\
-    & | & \mathcal{D}\big(\overline{t^{\polprd}}\big)\big(\overline{t^{\polcon}}\big)
+    & | & \mathcal{D}\ \overline{t^{\polprd}}\ \overline{t^{\polcon}}
     & \emph{Destructor-Application}
     \\
     & | & \mathcal{M}
@@ -144,7 +141,7 @@ The syntax is defined in \cref{fig:?:syntax}.
     & \Done
     & \emph{Top-Level-Consumer}
     \\
-    & | & \mathcal{D}\big(\overline{v^{\polprd}}\big)\big(\overline{v^{\polcon}}\big)
+    & | & \mathcal{D}\ \overline{v^{\polprd}}\ \overline{v^{\polcon}}
     & \emph{Observation}
     \\
     & | & \langle \mathcal{M}, \sigma \rangle
@@ -190,7 +187,7 @@ Define environments $\sigma$ as records
     \semtm
       {\sigma}
       {t^{\polcon}}
-      {\mathcal{D}\big(\overline{v^{\polprd}}\big)\big(\overline{v^{\polcon}}\big)}
+      {\mathcal{D}\ \overline{v^{\polprd}}\ \overline{v^{\polcon}}}
   $}
   \RightLabel{\textsc{E-Cmd-Ctor}}
   \TrinaryInfC{$
@@ -273,7 +270,7 @@ Define environments $\sigma$ as records
     \semtm
       {\sigma}
       {t^{\polcon}}
-      {\mathcal{D}\big(\overline{v^{\polprd}}\big)\big(\overline{v^{\polcon}}\big)}
+      {\mathcal{D}\ \overline{v^{\polprd}}\ \overline{v^{\polcon}}}
   $}
   \RightLabel{\textsc{E-Cmd-$\mu$Abs-Ctor}}
   \TrinaryInfC{$
@@ -301,8 +298,8 @@ Define environments $\sigma$ as records
   \UnaryInfC{$
     \semtm
       {\sigma}
-      {\otimes\big(\overline{t^{\polprd}}\big)}
-      {\tilde{\otimes}\big(\overline{v^{\polprd}}\big)}
+      {\otimes\ \overline{t^{\polprd}}}
+      {\tilde{\otimes}\ \overline{v^{\polprd}}}
   $}
 \end{prooftree}
 \vspace*{0.3cm}
@@ -387,8 +384,8 @@ Define environments $\sigma$ as records
   \BinaryInfC{$
     \semtm
       {\sigma}
-      {\mathcal{D}\big(\overline{t^{\polprd}}\big)\big(\overline{t^{\polcon}}\big)}
-      {\mathcal{D}\big(\overline{v^{\polprd}}\big)\big(\overline{v^{\polcon}}\big)}
+      {\mathcal{D}\ \overline{t^{\polprd}}\ \overline{t^{\polcon}}}
+      {\mathcal{D}\ \overline{v^{\polprd}}\ \overline{v^{\polcon}}}
   $}
 \end{prooftree}
 \vspace*{0.3cm}
@@ -415,7 +412,7 @@ Define environments $\sigma$ as records
   $}
   \RightLabel{\textsc{Tm-PrimOpApp}}
   \UnaryInfC{$
-    \typetmprd{P}{\otimes\big(\overline{t^{\polprd}}\big)}{T}
+    \typetmprd{P}{\otimes\ \overline{t^{\polprd}}}{T}
   $}
 \end{prooftree}
 \vspace*{0.3cm}
@@ -489,16 +486,16 @@ Define environments $\sigma$ as records
     \text{Sig}(\mathcal{D}, \mathcal{T}, P)
   $}
   \AxiomC{$
-    \forall i,\, \typetmprd{P}{t_{i}^{\polprd}}{\Sigma^{\polprd}(i)}
+    \forall i.\, \typetmprd{P}{t_{i}^{\polprd}}{\Sigma^{\polprd}(i)}
   $}
   \AxiomC{$
-    \forall i,\, \typetmcon{P}{t_{i}^{\polcon}}{\Sigma^{\polcon}(i)}
+    \forall i.\, \typetmcon{P}{t_{i}^{\polcon}}{\Sigma^{\polcon}(i)}
   $}
   \RightLabel{\textsc{Tm-DtorApp}}
   \TrinaryInfC{$
     \typetmcon
       {P}
-      {\mathcal{D}\big(\overline{t^{\polprd}}\big)\big(\overline{t^{\polcon}}\big)}
+      {\mathcal{D}\ \overline{t^{\polprd}}\ \overline{t^{\polcon}}}
       {\mathcal{T}}
   $}
 \end{prooftree}
@@ -532,7 +529,7 @@ Define environments $\sigma$ as records
 \vspace*{0.3cm}
 
 \begin{prooftree}
-  \AxiomC{$\forall \mathcal{C},\, \overline{\typecmd{P}{c}}$}
+  \AxiomC{$\forall \mathcal{C} \in \text{dom}(P.C).\, \overline{\typecmd{P}{c}}$}
   \RightLabel{\textsc{Wf-Ctor}}
   \UnaryInfC{$
     \typewf{
@@ -578,45 +575,28 @@ Let $\mathcal{L} \in \mu\textsc{Abs} \cup \textsc{Ctor}$ and define $\textsc{Sco
   \AxiomC{$P.C[\mathcal{C}^{\prime}] = \ldots \overline{c_{\mathcal{C}^{\prime}}}$}
   \AxiomC{$
     \exists
-    \mathcal{D}^{i},\,
-    \mathcal{C}\text{-}\mathcal{D}^{i} \leq c_{\mathcal{C}^{\prime}}
-    \,
-    \lor
-    \,
-    \ldots
+    \mathcal{D}\boxed{\pol}.\,
+    \exists
+    c
+    \in
+    \overline{c_{\mathcal{C}^{\prime}}}.\,
+    \mathcal{C}\text{-}\mathcal{D}\boxed{\pol} \leq c
   $}
-  \RightLabel{\textsc{Live-$\polprd$-Param}}
+  \RightLabel{\textsc{Live-$\pol$-Param}}
   \TrinaryInfC{$\liveness{P}{\mathcal{C}}{\mathcal{C}^{\prime}}$}
 \end{prooftree}
 \vspace*{0.3cm}
 
 \begin{prooftree}
-  \AxiomC{$\mathcal{C} \neq \mathcal{C}^{\prime}$}
-  \AxiomC{$P.C[\mathcal{C}^{\prime}] = \ldots \overline{c_{\mathcal{C}^{\prime}}}$}
+  \AxiomC{$\mathcal{M} \neq \mathcal{M}^{\prime}$}
+  \AxiomC{$P.M[\mathcal{M}^{\prime}] = \ldots c_{\mathcal{M}^{\prime}}$}
   \AxiomC{$
     \exists
-    \mathcal{D}_{i},\,
-    \mathcal{C}\text{-}\mathcal{D}_{i} \leq c_{\mathcal{C}^{\prime}}
-    \,
-    \lor
-    \,
-    \ldots
-  $}
-  \RightLabel{\textsc{Live-$\polcon$-Param}}
-  \TrinaryInfC{$\liveness{P}{\mathcal{C}}{\mathcal{C}^{\prime}}$}
-\end{prooftree}
-\vspace*{0.3cm}
-
-\begin{prooftree}
-  \AxiomC{$\mathcal{U} \neq \mathcal{U}^{\prime}$}
-  \AxiomC{$P.M[\mathcal{U}^{\prime}] = \ldots c_{\mathcal{U}^{\prime}}$}
-  \AxiomC{$
-    \exists
-    i,\,
-    \mathcal{U}^{i} \leq c_{\mathcal{U}^{\prime}}
+    i.\,
+    \mathcal{M}^{i} \leq c_{\mathcal{M}^{\prime}}
   $}
   \RightLabel{\textsc{Live-$\mu$-Param}}
-  \TrinaryInfC{$\liveness{P}{\mathcal{U}}{\mathcal{U^{\prime}}}$}
+  \TrinaryInfC{$\liveness{P}{\mathcal{M}}{\mathcal{U^{\prime}}}$}
 \end{prooftree}
 \vspace*{0.3cm}
 
@@ -624,39 +604,27 @@ Let $\mathcal{L} \in \mu\textsc{Abs} \cup \textsc{Ctor}$ and define $\textsc{Sco
   \AxiomC{$P.C[\mathcal{C}] = \ldots \overline{c_{\mathcal{C}}}$}
   \AxiomC{$
     \exists
-    i,\,
-    \mathcal{U}^{i} \leq c_{\mathcal{C}}
-    \,
-    \lor
-    \,
-    \ldots
+    i.\,
+    \exists
+    c
+    \in
+    \overline{c_{\mathcal{C}}}.\,
+    \mathcal{M}^{i} \leq c
   $}
   \RightLabel{\textsc{Live-$\mu$-Param-Ctor}}
-  \BinaryInfC{$\liveness{P}{\mathcal{U}}{\mathcal{C}}$}
+  \BinaryInfC{$\liveness{P}{\mathcal{M}}{\mathcal{C}}$}
 \end{prooftree}
 \vspace*{0.3cm}
 
 \begin{prooftree}
-  \AxiomC{$P.M[\mathcal{U}] = \ldots c_{\mathcal{U}}$}
+  \AxiomC{$P.M[\mathcal{M}] = \ldots c_{\mathcal{M}}$}
   \AxiomC{$
     \exists
-    \mathcal{D}^{i},\,
-    \mathcal{C}\text{-}\mathcal{D}^{i} \leq c_{\mathcal{U}}
+    \mathcal{D}\boxed{\pol}.\,
+    \mathcal{C}\text{-}\mathcal{D}\boxed{\pol} \leq c_{\mathcal{M}}
   $}
-  \RightLabel{\textsc{Live-$\polprd$-Param-$\mu$Abs}}
-  \BinaryInfC{$\liveness{P}{\mathcal{C}}{\mathcal{U}}$}
-\end{prooftree}
-\vspace*{0.3cm}
-
-\begin{prooftree}
-  \AxiomC{$P.M[\mathcal{U}] = \ldots c_{\mathcal{U}}$}
-  \AxiomC{$
-    \exists
-    \mathcal{D}_{i},\,
-    \mathcal{C}\text{-}\mathcal{D}_{i} \leq c_{\mathcal{U}}
-  $}
-  \RightLabel{\textsc{Live-$\polcon$-Param-$\mu$Abs}}
-  \BinaryInfC{$\liveness{P}{\mathcal{C}}{\mathcal{U}}$}
+  \RightLabel{\textsc{Live-$\pol$-Param-$\mu$Abs}}
+  \BinaryInfC{$\liveness{P}{\mathcal{C}}{\mathcal{M}}$}
 \end{prooftree}
 \vspace*{0.3cm}
 
@@ -665,11 +633,11 @@ Let $\mathcal{L} \in \mu\textsc{Abs} \cup \textsc{Ctor}$ and define $\textsc{Sco
   \AxiomC{$\liveness{P}{\mathcal{C}}{\mathcal{L}}$}
   \AxiomC{$P.C[\mathcal{C}^{\prime}] = \ldots \overline{c_{\mathcal{C}^{\prime}}}$}
   \AxiomC{$
-    \mathcal{L} \leq c_{\mathcal{C}^{\prime}}
-    \,
-    \lor
-    \,
-    \ldots
+    \exists
+    c
+    \in
+    \overline{c_{\mathcal{C}^{\prime}}}.\,
+    \mathcal{L} \leq c
   $}
   \RightLabel{\textsc{Live-Ctor}}
   \QuaternaryInfC{$\liveness{P}{\mathcal{C}}{\mathcal{C}^{\prime}}$}
@@ -677,39 +645,39 @@ Let $\mathcal{L} \in \mu\textsc{Abs} \cup \textsc{Ctor}$ and define $\textsc{Sco
 \vspace*{0.3cm}
 
 \begin{prooftree}
-  \AxiomC{$\mathcal{U} \neq \mathcal{U}^{\prime}$}
-  \AxiomC{$\liveness{P}{\mathcal{U}}{\mathcal{L}}$}
-  \AxiomC{$P.M[\mathcal{U}^{\prime}] = \ldots c_{\mathcal{U}^{\prime}}$}
+  \AxiomC{$\mathcal{M} \neq \mathcal{M}^{\prime}$}
+  \AxiomC{$\liveness{P}{\mathcal{M}}{\mathcal{L}}$}
+  \AxiomC{$P.M[\mathcal{M}^{\prime}] = \ldots c_{\mathcal{M}^{\prime}}$}
   \AxiomC{$
-    \mathcal{L} \leq c_{\mathcal{U}^{\prime}}
+    \mathcal{L} \leq c_{\mathcal{M}^{\prime}}
   $}
   \RightLabel{\textsc{Live-$\mu$Abs}}
-  \QuaternaryInfC{$\liveness{P}{\mathcal{U}}{\mathcal{U}^{\prime}}$}
+  \QuaternaryInfC{$\liveness{P}{\mathcal{M}}{\mathcal{M}^{\prime}}$}
 \end{prooftree}
 \vspace*{0.3cm}
 
 \begin{prooftree}
-  \AxiomC{$\liveness{P}{\mathcal{U}}{\mathcal{L}}$}
+  \AxiomC{$\liveness{P}{\mathcal{M}}{\mathcal{L}}$}
   \AxiomC{$P.C[\mathcal{C}] = \ldots \overline{c_{\mathcal{C}}}$}
   \AxiomC{$
-    \mathcal{L} \leq c_{\mathcal{C}}
-    \,
-    \lor
-    \,
-    \ldots
+    \exists
+    c
+    \in
+    \overline{c_{\mathcal{C}}}.\,
+    \mathcal{L} \leq c
   $}
   \RightLabel{\textsc{Live-$\mu$Abs-Ctor}}
-  \TrinaryInfC{$\liveness{P}{\mathcal{U}}{\mathcal{C}}$}
+  \TrinaryInfC{$\liveness{P}{\mathcal{M}}{\mathcal{C}}$}
 \end{prooftree}
 \vspace*{0.3cm}
 
 \begin{prooftree}
   \AxiomC{$\liveness{P}{\mathcal{C}}{\mathcal{L}}$}
-  \AxiomC{$P.M[\mathcal{U}] = \ldots c_{\mathcal{U}}$}
+  \AxiomC{$P.M[\mathcal{M}] = \ldots c_{\mathcal{M}}$}
   \AxiomC{$
-    \mathcal{L} \leq c_{\mathcal{U}}
+    \mathcal{L} \leq c_{\mathcal{M}}
   $}
   \RightLabel{\textsc{Live-Ctor-$\mu$Abs}}
-  \TrinaryInfC{$\liveness{P}{\mathcal{C}}{\mathcal{U}}$}
+  \TrinaryInfC{$\liveness{P}{\mathcal{C}}{\mathcal{M}}$}
 \end{prooftree}
 \vspace*{0.3cm}

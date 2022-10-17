@@ -1,5 +1,3 @@
-%TODO read judgements
-
 In the formalization of the language we use an orientation parameter $\pol \in \{ \polprd,\polcon \}$ and functions
 
 \begin{align*}
@@ -145,9 +143,7 @@ Define environments $\sigma$ as records
     M: \mu\textsc{Abs} \to V^{\polprd}
   \right\rbrace
 \end{align*}
-
 mutually recursive with
-
 \[
   \begin{array}{lclr}
     \multicolumn{4}{r}{
@@ -181,6 +177,134 @@ mutually recursive with
     \\[0.5cm]
   \end{array}
 \]
+The judgement $\semtm{\sigma}{t^{\pol}}{t^{\pol\prime}}$ can be read like: For some environment $\sigma$ $\pol$-term $t^{\pol}$ reduces to $\pol$-term $t^{\pol\prime}$.
+
+\begin{prooftree}
+  \AxiomC{$
+    \overline{\semtm{\sigma}{t^{\polprd}}{v^{\polprd}}}
+  $}
+  \RightLabel{\textsc{E-Tm-PrimOpApp}}
+  \UnaryInfC{$
+    \semtm
+      {\sigma}
+      {\otimes\ \overline{t^{\polprd}}}
+      {\tilde{\otimes}\ \overline{v^{\polprd}}}
+  $}
+\end{prooftree}
+\vspace*{0.3cm}
+
+\begin{prooftree}
+  \AxiomC{$
+    \text{Vals}(\sigma.C[\mathcal{C}], \mathcal{D})
+    =
+    \left(
+      \left(
+        \ldots,
+        v_{i}^{\polprd},
+        \ldots
+      \right),
+      \left(
+        \ldots
+      \right)
+    \right)
+  $}
+  \RightLabel{\textsc{E-Tm-$\polprd$-Param}}
+  \UnaryInfC{$
+    \semtm{\sigma}{\mathcal{C}\text{-}\mathcal{D}^{i}}{v_{i}^{\polprd}}
+  $}
+\end{prooftree}
+\vspace*{0.3cm}
+
+\begin{prooftree}
+  \AxiomC{}
+  \RightLabel{\textsc{E-Tm-Ctor}}
+  \UnaryInfC{$
+    \semtm
+      {\sigma}
+      {\mathcal{C}}
+      {\langle \mathcal{C}, \sigma \rangle}
+  $}
+\end{prooftree}
+\vspace*{0.3cm}
+
+\begin{prooftree}
+  \AxiomC{$
+    \sigma.M[\mathcal{M}]
+    =
+    v^{\polprd}
+  $}
+  \RightLabel{\textsc{E-Tm-$\mu$-Param}}
+  \UnaryInfC{$
+    \semtm{\sigma}{\mathcal{M}_{i}}{v^{\polprd}}
+  $}
+\end{prooftree}
+\vspace*{0.3cm}
+
+\begin{prooftree}
+  \AxiomC{$
+    \text{Vals}(\sigma.C[\mathcal{C}], \mathcal{D})
+    =
+    \left(
+      \left(
+        \ldots
+      \right),
+      \left(
+        \ldots,
+        v_{i}^{\polcon},
+        \ldots
+      \right)
+    \right)
+  $}
+  \RightLabel{\textsc{E-Tm-$\polcon$-Param}}
+  \UnaryInfC{$
+    \semtm{\sigma}{\mathcal{C}\text{-}\mathcal{D}_{i}}{v_{i}^{\polprd}}
+  $}
+\end{prooftree}
+\vspace*{0.3cm}
+
+\begin{prooftree}
+  \AxiomC{$
+    \overline{\semtm{\sigma}{t^{\polprd}}{v^{\polprd}}}
+  $}
+  \AxiomC{$
+    \overline{\semtm{\sigma}{t^{\polcon}}{v^{\polcon}}}
+  $}
+  \RightLabel{\textsc{E-Tm-DtorApp}}
+  \BinaryInfC{$
+    \semtm
+      {\sigma}
+      {\mathcal{D}\ \overline{t^{\polprd}}\ \overline{t^{\polcon}}}
+      {\mathcal{D}\ \overline{v^{\polprd}}\ \overline{v^{\polcon}}}
+  $}
+\end{prooftree}
+\vspace*{0.3cm}
+
+\begin{prooftree}
+  \AxiomC{}
+  \RightLabel{\textsc{E-Tm-$\mu$Abs}}
+  \UnaryInfC{$
+    \semtm
+      {\sigma}
+      {\mathcal{M}}
+      {\langle \mathcal{M}, \sigma \rangle}
+  $}
+\end{prooftree}
+\vspace*{0.3cm}
+
+\[
+  \begin{array}{lclr}
+    % machine states
+    s
+    & \Coloneqq
+    & \stateprd{\sigma}{\mathcal{C}}{\mathcal{D}}
+    & \emph{Producer-State}
+    \\
+    & | & \statecon{\sigma}{\mathcal{M}}
+    & \emph{Consumer-State}
+    \\[0.5cm]
+  \end{array}
+\]
+The judgement $\semcmd{P}{s}{s^{\prime}}$ can be read like: In the context of a program $P$ there is a machine step from state $s$ to state $s^{\prime}$.
 
 \begin{prooftree}
   \AxiomC{$
@@ -303,119 +427,15 @@ mutually recursive with
 \end{prooftree}
 \vspace*{0.3cm}
 
-\begin{prooftree}
-  \AxiomC{$
-    \overline{\semtm{\sigma}{t^{\polprd}}{v^{\polprd}}}
-  $}
-  \RightLabel{\textsc{E-Tm-PrimOpApp}}
-  \UnaryInfC{$
-    \semtm
-      {\sigma}
-      {\otimes\ \overline{t^{\polprd}}}
-      {\tilde{\otimes}\ \overline{v^{\polprd}}}
-  $}
-\end{prooftree}
-\vspace*{0.3cm}
-
-\begin{prooftree}
-  \AxiomC{$
-    \text{Vals}(\sigma.C[\mathcal{C}], \mathcal{D})
-    =
-    \left(
-      \left(
-        \ldots,
-        v_{i}^{\polprd},
-        \ldots
-      \right),
-      \left(
-        \ldots
-      \right)
-    \right)
-  $}
-  \RightLabel{\textsc{E-Tm-$\polprd$-Param}}
-  \UnaryInfC{$
-    \semtm{\sigma}{\mathcal{C}\text{-}\mathcal{D}^{i}}{v_{i}^{\polprd}}
-  $}
-\end{prooftree}
-\vspace*{0.3cm}
-
-\begin{prooftree}
-  \AxiomC{}
-  \RightLabel{\textsc{E-Tm-Ctor}}
-  \UnaryInfC{$
-    \semtm
-      {\sigma}
-      {\mathcal{C}}
-      {\langle \mathcal{C}, \sigma \rangle}
-  $}
-\end{prooftree}
-\vspace*{0.3cm}
-
-\begin{prooftree}
-  \AxiomC{$
-    \sigma.M[\mathcal{M}]
-    =
-    v^{\polprd}
-  $}
-  \RightLabel{\textsc{E-Tm-$\mu$-Param}}
-  \UnaryInfC{$
-    \semtm{\sigma}{\mathcal{M}_{i}}{v^{\polprd}}
-  $}
-\end{prooftree}
-\vspace*{0.3cm}
-
-\begin{prooftree}
-  \AxiomC{$
-    \text{Vals}(\sigma.C[\mathcal{C}], \mathcal{D})
-    =
-    \left(
-      \left(
-        \ldots
-      \right),
-      \left(
-        \ldots,
-        v_{i}^{\polcon},
-        \ldots
-      \right)
-    \right)
-  $}
-  \RightLabel{\textsc{E-Tm-$\polcon$-Param}}
-  \UnaryInfC{$
-    \semtm{\sigma}{\mathcal{C}\text{-}\mathcal{D}_{i}}{v_{i}^{\polprd}}
-  $}
-\end{prooftree}
-\vspace*{0.3cm}
-
-\begin{prooftree}
-  \AxiomC{$
-    \overline{\semtm{\sigma}{t^{\polprd}}{v^{\polprd}}}
-  $}
-  \AxiomC{$
-    \overline{\semtm{\sigma}{t^{\polcon}}{v^{\polcon}}}
-  $}
-  \RightLabel{\textsc{E-Tm-DtorApp}}
-  \BinaryInfC{$
-    \semtm
-      {\sigma}
-      {\mathcal{D}\ \overline{t^{\polprd}}\ \overline{t^{\polcon}}}
-      {\mathcal{D}\ \overline{v^{\polprd}}\ \overline{v^{\polcon}}}
-  $}
-\end{prooftree}
-\vspace*{0.3cm}
-
-\begin{prooftree}
-  \AxiomC{}
-  \RightLabel{\textsc{E-Tm-$\mu$Abs}}
-  \UnaryInfC{$
-    \semtm
-      {\sigma}
-      {\mathcal{M}}
-      {\langle \mathcal{M}, \sigma \rangle}
-  $}
-\end{prooftree}
-\vspace*{0.3cm}
-
 \subsection{Typing}
+
+The judgement $\typetmprd{\sigma}{t^{\polprd}}{T}$ can be read like: In the context of a program $P$ the $\polprd$-term $t^{\polprd}$ is a producer of type $T$.
+\\
+The judgement $\typetmcon{\sigma}{t^{\polcon}}{T}$ can be read like: In the context of a program $P$ the $\polcon$-term $t^{\polcon}$ is a consumer of type $T$.
+\\
+The judgement $\typecmd{P}{c}$ can be read like: In the context of a program $P$ the command $c$ well-formed.
+\\
+The judgement $\typewf{P}$ can be read like: The program $P$ is well-formed.
 
 \begin{prooftree}
   \AxiomC{$
@@ -566,7 +586,11 @@ mutually recursive with
 \vspace*{0.3cm}
 
 \subsection{Liveness}
-Let $\mathcal{L} \in \mu\textsc{Abs} \cup \textsc{Ctor}$ and define $\textsc{Scope}_{P}(\mathcal{L}_{e}) := \lbrace \mathcal{L} \,|\, \liveness{P}{\mathcal{L}_{e}}{\mathcal{L}} \rbrace$ where
+Let $\textsc{Label} := \mu\textsc{Abs} \cup \textsc{Ctor}$ and $\mathcal{L} \in \textsc{Label}$.
+\\
+The judgement $\liveness{P}{\mathcal{L}}{\mathcal{L}^{\prime}}$ can be read like: In program $P$ the $\pol$-label $\mathcal{L}$ is live in the $\pol$-label $\mathcal{L}^{\prime}$.
+\\
+Define $\textsc{Scope}_{P}(\mathcal{L}_{e}) := \lbrace \mathcal{L} \,|\, \liveness{P}{\mathcal{L}_{e}}{\mathcal{L}} \rbrace$ where
 \\
 \begin{prooftree}
   \AxiomC{$\mathcal{C} \neq \mathcal{C}^{\prime}$}

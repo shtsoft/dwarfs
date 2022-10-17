@@ -15,10 +15,7 @@
 % Formalization-Commands
 \newcommand{\Bool}{\textsc{Bool}}
 \newcommand{\Int}{\textsc{Int}}
-\newcommand{\codata}{\ensuremath{\mathbf{codata}}}
-\newcommand{\where}{\ensuremath{\mathbf{where}}}
-\newcommand{\match}{\ensuremath{\mathbf{match}}}
-\newcommand{\inin}{\ensuremath{\mathbf{in}}}
+\newcommand{\by}{\ensuremath{\mathbf{by}}}
 \newcommand{\Done}{\ensuremath{\mathbf{Done}}}
 
 \newcommand*{\flip}[1]{\hat{#1}}
@@ -60,7 +57,7 @@
   }
 }
 \newcommand{\semcmd}[3]{
-  \ensuremath{#1\ \colmeta{\vdash}\ #2\ \colmeta{\vartriangleright}\ #3}
+  \ensuremath{#1\ \colmeta{\vdash}\ #2\ \colmeta{\boxed{\triangleright}}\ #3}
 }
 \newcommand{\semtm}[3]{
   \ensuremath{#1\ \colmeta{\vdash}\ #2\ \colmeta{\triangleright}\ #3}
@@ -81,10 +78,17 @@
   \ensuremath{#1\ \colmeta{\vdash}\ #2\ \colmeta{\text{live}}\ #3}
 }
 
+\newcommand{\manglecmd}[3]{
+  \ensuremath{#1\ \colmeta{\vdash}\ #2\ \colmeta{\boxed{\succ}}\ #3}
+}
+
+\newcommand{\mangletm}[3]{
+  \ensuremath{#1\ \colmeta{\vdash}\ #2\ \colmeta{\succ}\ #3}
+}
+
 % Programming-Commands
 \newcommand{\muconabs}[3]{\ensuremath{\mu(#1 \prd #2).#3}}
 
-\newcommand{\FunXY}{\colcon{\textsc{Fun}}XY}
 \newcommand{\FunXX}{\colcon{\textsc{Fun}}XX}
 \newcommand{\Apply}{\colcon{\text{Apply}}}
 \newcommand{\identity}{\colprd{\text{id}}}

@@ -1,1 +1,278 @@
+%TODO read judgements
 
+Let $\text{M} \colon (t^{\polprd} \to t^{\polprd}) \lor (t^{\polcon} \to t^{\polcon})$.
+
+\begin{prooftree}
+  \AxiomC{$
+    \mangletm{\text{M}}{t^{\polprd}}{t^{\prime\polprd}}
+  $}
+  \AxiomC{$
+    \mangletm{\text{M}}{t^{\polcon}}{t^{\prime\polcon}}
+  $}
+  \RightLabel{\textsc{M-Cmd}}
+  \BinaryInfC{$
+    \manglecmd{\text{M}}{t^{\polprd} \mkCmd t^{\polcon}}{t^{\prime\polprd} \mkCmd t^{\prime\polcon}}
+  $}
+\end{prooftree}
+\vspace*{0.3cm}
+
+\begin{prooftree}
+  \AxiomC{$
+    \text{M}[t^{\pol}]
+    =
+    t^{\prime\pol}
+  $}
+  \RightLabel{\textsc{M-Tm-$\pol$-Lookup}}
+  \UnaryInfC{$
+    \mangletm{\text{M}}{t^{\pol}}{t^{\prime\pol}}
+  $}
+\end{prooftree}
+\vspace*{0.3cm}
+
+\begin{prooftree}
+  \AxiomC{$
+    \otimes\ \overline{t^{\polprd}}
+    \notin
+    \text{dom}(\text{M})
+  $}
+  \AxiomC{$
+    \overline{\mangletm{\text{M}}{t^{\polprd}}{t^{\prime\polprd}}}
+  $}
+  \RightLabel{\textsc{M-Tm-PrimOpApp}}
+  \BinaryInfC{$
+    \mangletm{\text{M}}{\otimes\ \overline{t^{\polprd}}}{\otimes\ \overline{t^{\prime\polprd}}}
+  $}
+\end{prooftree}
+\vspace*{0.3cm}
+
+\begin{prooftree}
+  \AxiomC{$
+    \mathcal{C}\text{-}\mathcal{D}^{i}
+    \notin
+    \text{dom}(\text{M})
+  $}
+  \AxiomC{$
+    \mangletm{\text{M}}{\mathcal{C}}{\mathcal{C}^{\prime}}
+  $}
+  \RightLabel{\textsc{M-Tm-$\polprd$-Param}}
+  \BinaryInfC{$
+    \mangletm
+      {\text{M}}
+      {\mathcal{C}\text{-}\mathcal{D}^{i}}{
+        \mathcal{C}^{\prime}\text{-}\mathcal{D}^{i}}
+  $}
+\end{prooftree}
+\vspace*{0.3cm}
+
+\begin{prooftree}
+  \AxiomC{$
+    \mathcal{C}
+    \notin
+    \text{dom}(\text{M})
+  $}
+  \RightLabel{\textsc{M-Tm-Ctor}}
+  \UnaryInfC{$
+    \mangletm{\text{M}}{\mathcal{C}}{\mathcal{C}}
+  $}
+\end{prooftree}
+\vspace*{0.3cm}
+
+\begin{prooftree}
+  \AxiomC{$
+    \mathcal{M}^{i}
+    \notin
+    \text{dom}(\text{M})
+  $}
+  \AxiomC{$
+    \mangletm{\text{M}}{\mathcal{M}}{\mathcal{M}^{\prime}}
+  $}
+  \RightLabel{\textsc{M-Tm-$\mu$-Param}}
+  \BinaryInfC{$
+    \mangletm{\text{M}}{\mathcal{M}^{i}}{\mathcal{M}^{\prime i}}
+  $}
+\end{prooftree}
+\vspace*{0.3cm}
+
+\begin{prooftree}
+  \AxiomC{$
+    \mathcal{C}\text{-}\mathcal{D}_{i}
+    \notin
+    \text{dom}(\text{M})
+  $}
+  \AxiomC{$
+    \mangletm{\text{M}}{\mathcal{C}}{\mathcal{C}^{\prime}}
+  $}
+  \RightLabel{\textsc{M-Tm-$\polcon$-Param}}
+  \BinaryInfC{$
+    \mangletm
+      {\text{M}}
+      {\mathcal{C}\text{-}\mathcal{D}_{i}}
+      {\mathcal{C}^{\prime}\text{-}\mathcal{D}_{i}}
+  $}
+\end{prooftree}
+\vspace*{0.3cm}
+
+\begin{prooftree}
+  \AxiomC{$
+    \mathcal{D}\ \overline{t^{\polprd}}\ \overline{t^{\polcon}}
+    \notin
+    \text{dom}(\text{M})
+  $}
+  \AxiomC{$
+    \overline{\mangletm{\text{M}}{t^{\polprd}}{t^{\prime\polprd}}}
+  $}
+  \AxiomC{$
+    \overline{\mangletm{\text{M}}{t^{\polcon}}{t^{\prime\polcon}}}
+  $}
+  \RightLabel{\textsc{M-Tm-DtorApp}}
+  \TrinaryInfC{$
+    \mangletm
+      {\text{M}}
+      {\mathcal{D}\ \overline{t^{\polprd}}\ \overline{t^{\polcon}}}
+      {\mathcal{D}\ \overline{t^{\prime\polprd}}\ \overline{t^{\prime\polcon}}}
+  $}
+\end{prooftree}
+\vspace*{0.3cm}
+
+\begin{prooftree}
+  \AxiomC{$
+    \mathcal{M}
+    \notin
+    \text{dom}(\text{M})
+  $}
+  \RightLabel{\textsc{M-Tm-$\mu$Abs}}
+  \UnaryInfC{$
+    \mangletm{\text{M}}{\mathcal{M}}{\mathcal{M}}
+  $}
+\end{prooftree}
+\vspace*{0.3cm}
+
+\begin{codealign}
+  &
+    \mathbf{function}\
+    mangle
+    \left(
+      P,
+      \text{M},
+      \mathcal{L}_{e},
+      T_{e}^{\prime},
+      \Sigma^{\prime\polprd},
+      \Sigma^{\prime\polcon}
+    \right)
+  \\[-3pt]
+  &\quad
+    \mathbf{foreach}\
+    \mathcal{L}
+    \in
+    \textsc{Scope}_{P}(\mathcal{L}_{e})
+    \setminus
+    \mathcal{L}_{e}\
+    \mathbf{do}
+  \\[-3pt]
+  &\quad\quad
+    \mathcal{L}^{\prime}
+    =
+    fresh()
+  \\[-3pt]
+  &\quad\quad
+    \text{M}[\mathcal{L} \mapsto \mathcal{L}^{\prime}]
+  \\[-3pt]
+  &\quad
+    \mathbf{end}
+  \\[-3pt]
+  &\quad
+    \mathbf{foreach}\
+    \mathcal{L}
+    \in
+    \textsc{Scope}_{P}(\mathcal{L}_{e})
+    \setminus
+    \mathcal{L}_{e}\
+    \mathbf{do}
+  \\[-3pt]
+  &\quad\quad
+    \mathcal{L}^{\prime}
+    =
+    \text{M}[\mathcal{L}]
+  \\[-3pt]
+  &\quad\quad
+    \mathbf{match}\
+    \mathcal{L}\
+    \mathbf{with}
+  \\[-3pt]
+  &\quad\quad\quad
+    \mathcal{C}
+    \Rightarrow
+  \\[-3pt]
+  &\quad\quad\quad\quad
+    \prd \mathcal{T}\ \by\ \overline{\mathcal{D}\Sigma^{\polprd}\Sigma^{\polcon} \colon c}
+    =
+    P.C[\mathcal{C}]
+  \\[-3pt]
+  &\quad\quad\quad\quad
+    P.C
+    \left[
+      \mathcal{L}^{\prime}
+      \mapsto
+      \prd \mathcal{T}\ \by\
+      \overline{\mathcal{D}\Sigma^{\polprd}\Sigma^{\polcon} \colon c^{\prime}}
+    \right]\
+    \mathbf{where}\
+    \overline{\mangletm{\text{M}}{c}{c^{\prime}}}
+  \\[-3pt]
+  &\quad\quad\quad
+    \mathcal{M}
+    \Rightarrow
+  \\[-3pt]
+  &\quad\quad\quad\quad
+    \con T \colon c
+    =
+    P.M[\mathcal{M}]
+  \\[-3pt]
+  &\quad\quad\quad\quad
+    P.M[\mathcal{L}^{\prime} \mapsto \con T \colon c^{\prime}]\
+    \mathbf{where}\
+    \mangletm{\text{M}}{c}{c^{\prime}}
+  \\[-3pt]
+  &\quad
+    \mathbf{end}
+  \\[-3pt]
+  &\quad
+    \overline{c_{e}} = \text{Cmds}(\mathcal{L}_{e})
+  \\[-3pt]
+  &\quad
+    \mathcal{L}_{e}^{\prime}
+    =
+    fresh()
+  \\[-3pt]
+  &\quad
+    \mathbf{match}\
+    \mathcal{L}_{e}^{\prime}\
+    \mathbf{with}
+  \\[-3pt]
+  &\quad\quad
+    \mathcal{C}
+    \Rightarrow
+    P.C
+    \left[
+      \mathcal{C}
+      \mapsto
+      \prd T_{e}^{\prime}\ \by\
+      \overline{\mathcal{D}\Sigma^{\prime\polprd}\Sigma^{\prime\polcon} \colon c_{e}^{\prime}}
+    \right]\
+    \mathbf{where}\
+    \overline{\mangletm{\text{M}}{c_{e}}{c_{e}^{\prime}}}
+  \\[-3pt]
+  &\quad\quad
+    \mathcal{M}
+    \Rightarrow
+    P.M[\mathcal{M} \mapsto \con T_{e}^{\prime} \colon c_{e}^{\prime}]\
+    \mathbf{where}\
+    \mangletm{\text{M}}{c_{e}}{c_{e}^{\prime}}
+  \\[-3pt]
+  &\quad
+    \mathbf{return}\
+    \mathcal{L}_{e}^{\prime}
+  \\[-3pt]
+  &
+    \mathbf{end}
+\end{codealign}

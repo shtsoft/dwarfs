@@ -1,3 +1,5 @@
+%TODO read judgements
+
 In the formalization of the language we use an orientation parameter $\pol \in \{ \polprd,\polcon \}$ and functions
 
 \begin{align*}
@@ -93,19 +95,18 @@ The syntax is defined in \cref{fig:?:syntax}.
     % Constructor-Definition
     C
     & \Coloneqq
-    & \textsc{Ctor} \to \codata\
-      \mathcal{T}\
-      \where\
-      \overline{\mathcal{D}\Sigma^{\polprd}\Sigma^{\polcon}}\
-      := \match\
-         \overline{c}
+    & \textsc{Ctor}
+      \to
+      \prd \mathcal{T}\ \by\ \overline{\mathcal{D}\Sigma^{\polprd}\Sigma^{\polcon} \colon c}
     & \emph{Constructor-Definitions}
     \\[0.5cm]
 
     % mu-Definition
     M
     & \Coloneqq
-    & \mu\textsc{Abs} \to T\ \inin\ c
+    & \mu\textsc{Abs}
+      \to
+      \con T\ \colon\ c
     & \emph{$\mu$-Definitions}
     \\[0.5cm]
 
@@ -221,7 +222,9 @@ mutually recursive with
   \AxiomC{$
     P.M[\mathcal{M}]
     =
-    \ldots
+    \con
+    T
+    \colon
     t^{\polprd} \mkCmd t^{\polcon}
   $}
   \AxiomC{$
@@ -266,7 +269,9 @@ mutually recursive with
   \AxiomC{$
     P.M[\mathcal{M}]
     =
-    \ldots
+    \con
+    T
+    \colon
     t^{\polprd} \mkCmd t^{\polcon}
   $}
   \AxiomC{$
@@ -314,7 +319,7 @@ mutually recursive with
 
 \begin{prooftree}
   \AxiomC{$
-    \text{lookup}(\sigma.C[\mathcal{C}], \mathcal{D})
+    \text{Vals}(\sigma.C[\mathcal{C}], \mathcal{D})
     =
     \left(
       \left(
@@ -361,7 +366,7 @@ mutually recursive with
 
 \begin{prooftree}
   \AxiomC{$
-    \text{lookup}(\sigma.C[\mathcal{C}], \mathcal{D})
+    \text{Vals}(\sigma.C[\mathcal{C}], \mathcal{D})
     =
     \left(
       \left(
@@ -429,7 +434,7 @@ mutually recursive with
   \AxiomC{$
     P.C[\mathcal{C}]
     =
-    \codata\ \mathcal{T} \ldots
+    \prd \mathcal{T}\ \by\ \ldots
   $}
   \RightLabel{\textsc{Tm-Ctor}}
   \UnaryInfC{$
@@ -442,7 +447,7 @@ mutually recursive with
   \AxiomC{$
     P.C[\mathcal{C}]
     =
-    \ldots \where \ldots \mathcal{D}\Sigma^{\polprd}\Sigma^{\polcon} \ldots
+    \by\ \ldots \mathcal{D}\Sigma^{\polprd}\Sigma^{\polcon} \ldots
   $}
   \AxiomC{$
     T
@@ -460,7 +465,10 @@ mutually recursive with
   \AxiomC{$
     P.M[\mathcal{M}]
     =
-    T\ \inin\ \ldots
+    \con
+    T
+    \colon
+    c
   $}
   \RightLabel{\textsc{Tm-$\mu$-Param}}
   \UnaryInfC{$
@@ -473,7 +481,7 @@ mutually recursive with
   \AxiomC{$
     P.C[\mathcal{C}]
     =
-    \ldots \where \ldots \mathcal{D}\Sigma^{\polprd}\Sigma^{\polcon} \ldots
+    \by\ \ldots \mathcal{D}\Sigma^{\polprd}\Sigma^{\polcon} \ldots
   $}
   \AxiomC{$
     T
@@ -513,7 +521,10 @@ mutually recursive with
   \AxiomC{$
     P.M[\mathcal{M}]
     =
-    T\ \inin\ \ldots
+    \con
+    T
+    \colon
+    c
   $}
   \RightLabel{\textsc{Tm-$\mu$Abs}}
   \UnaryInfC{$
@@ -538,40 +549,19 @@ mutually recursive with
 
 \begin{prooftree}
   \AxiomC{$\forall \mathcal{C} \in \text{dom}(P.C).\, \overline{\typecmd{P}{c}}$}
-  \RightLabel{\textsc{Wf-Ctor}}
-  \UnaryInfC{$
+  \AxiomC{$\typecmd{P}{c}$}
+  \RightLabel{\textsc{Wf-Program}}
+  \BinaryInfC{$
     \typewf{
       \textsc{Ctor}
       \to
-      \codata\
-      \mathcal{T}\
-      \where\
-      \overline{\mathcal{D}\Sigma^{\polprd}\Sigma^{\polcon}}\
-      := \match\
-         \overline{c}
-    }
-  $}
-\end{prooftree}
-\vspace*{0.3cm}
-
-\begin{prooftree}
-  \AxiomC{$\typecmd{P}{c}$}
-  \RightLabel{\textsc{Wf-$\mu$}}
-  \UnaryInfC{$
-    \typewf{
+      \prd \mathcal{T}\ \by\ \overline{\mathcal{D}\Sigma^{\polprd}\Sigma^{\polcon} \colon c}
+      \ \&\
       \mu\textsc{Abs}
       \to
-      T\ \inin\ c
+      \con T \colon c
     }
   $}
-\end{prooftree}
-\vspace*{0.3cm}
-
-\begin{prooftree}
-  \AxiomC{$\typewf{C}$}
-  \AxiomC{$\typewf{M}$}
-  \RightLabel{\textsc{Wf-Program}}
-  \BinaryInfC{$\typewf{C\ \&\ M}$}
 \end{prooftree}
 \vspace*{0.3cm}
 

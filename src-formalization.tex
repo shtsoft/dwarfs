@@ -66,7 +66,7 @@ The syntax is defined in \cref{fig:?:syntax}.
     & | & \mathcal{C}\text{-}\mathcal{D}^{i}
     & \emph{$\polprd$-Parameter}
     \\
-    & | & \mathcal{M}^{i}
+    & | & \mathcal{M}^{p}
     & \emph{$\mu$-Parameter}
     \\[0.5cm]
 
@@ -362,7 +362,7 @@ The judgement $\semcmd{P}{s}{s^{\prime}}$ can be read like: In the context of a 
     \semcmd
       {P}
       {\statecon{\sigma}{\mathcal{M}}}
-      {\statecon{\sigma^{\prime}[\mathcal{M}^{i} \mapsto v^{\polprd}]}{\mathcal{M}^{\prime}}}
+      {\statecon{\sigma^{\prime}[\mathcal{M}^{p} \mapsto v^{\polprd}]}{\mathcal{M}^{\prime}}}
   $}
 \end{prooftree}
 \vspace*{0.3cm}
@@ -384,7 +384,7 @@ The judgement $\semcmd{P}{s}{s^{\prime}}$ can be read like: In the context of a 
     \semcmd
       {P}
       {\stateprd{\sigma}{\mathcal{C}}{\mathcal{D}}}
-      {\statecon{\sigma^{\prime}[\mathcal{M}^{i} \mapsto v^{\polprd}]}{\mathcal{M}}}
+      {\statecon{\sigma^{\prime}[\mathcal{M}^{p} \mapsto v^{\polprd}]}{\mathcal{M}}}
   $}
 \end{prooftree}
 \vspace*{0.3cm}
@@ -492,7 +492,7 @@ The judgement $\typewf{P}$ can be read like: The program $P$ is well-formed.
   $}
   \RightLabel{\textsc{Tm-$\mu$-Param}}
   \UnaryInfC{$
-    \typetmprd{P}{\mathcal{M}^{i}}{T}
+    \typetmprd{P}{\mathcal{M}^{p}}{T}
   $}
 \end{prooftree}
 \vspace*{0.3cm}
@@ -615,7 +615,7 @@ Define $\textsc{Scope}_{P}(\mathcal{L}_{e}) := \lbrace \mathcal{L} \,|\, \livene
   \AxiomC{$
     \exists
     i.\,
-    \mathcal{M}^{i} \leq c_{\mathcal{M}^{\prime}}
+    \mathcal{M}^{p} \leq c_{\mathcal{M}^{\prime}}
   $}
   \RightLabel{\textsc{Live-$\mu$-Param}}
   \TrinaryInfC{$\liveness{P}{\mathcal{M}}{\mathcal{C}^{\prime}}$}
@@ -631,7 +631,7 @@ Define $\textsc{Scope}_{P}(\mathcal{L}_{e}) := \lbrace \mathcal{L} \,|\, \livene
     c
     \in
     \overline{c_{\mathcal{C}}}.\,
-    \mathcal{M}^{i} \leq c
+    \mathcal{M}^{p} \leq c
   $}
   \RightLabel{\textsc{Live-$\mu$-Param-Ctor}}
   \BinaryInfC{$\liveness{P}{\mathcal{M}}{\mathcal{C}}$}

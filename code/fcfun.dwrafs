@@ -6,109 +6,105 @@ main(x) = g(f(x))
 -------------------------------------------
 compile-dwarfs
 -------------------------------------------
-codata FunX:
-  apply'(:prd: X) :con: FunX
+f :prd: FunA(FunAA) by
+  apply(f_x :prd: A, f_ret :con: FunAA):
+    f_clos >> f_ret
 
-codata FunXY:
-  apply(:prd: X, :con: Y) :con: FunXY
+f_clos :prd: FunAA by
+  apply(y :prd: A, f_clos_ret :con: A):
+    (f_x + y) >> f_clos_ret
 
-comatch f :prd: FunA(FunAA):
-  apply(f_x, f_ret) => f_clos >> f_ret
+g :prd: Fun(FunAA)A by
+  apply(g_F :prd: FunAA, g_ret :con: A):
+    g_F >> apply(a, g_ret)
 
-comatch f_clos :prd: FunAA:
-  apply(y, f_clos_ret) => (f_x + y) >> f_clos_ret
+main :prd: FunA by
+  apply(main_x :prd: FunA):
+    f >> apply(main_x, main_g)
 
-comatch g :prd: Fun(FunAA)A:
-  apply(g_F, g_ret): => g_F >> apply(a, g_ret)
-
-comatch main :prd: FunA:
-  apply'(main_x) => f >> apply(main_x, mu(F :prd: FunAA).g >> apply(F, DONE))
+main_g :con: FunAA:
+  g >> apply(main_g^p, DONE)
 -------------------------------------------
-drop(f_ret |-> mu...)
+drop(f_ret |-> main_g)
 -------------------------------------------
-codata FunX:
-  apply'(:prd: X) :con: FunX
+f :prd: FunA by
+  apply(f_x :prd: A):
+    f_clos >> main_g
 
-codata FunXY:
-  apply(:prd: X, :con: Y) :con: FunXY
+f_clos :prd: FunAA by
+  apply(y :prd: A, f_clos_ret :con: A):
+    (f_x + y) >> f_clos_ret
 
-comatch f :prd: FunA:
-  apply'(f_x) => f_clos >> mu(F :prd: FunAA).g >> apply(F, DONE)
+g :prd: Fun(FunAA)A by
+  apply(g_F :prd: FunAA, g_ret :con: A):
+    g_F >> apply(a, g_ret)
 
-comatch f_clos :prd: FunAA:
-  apply(y, f_clos_ret) => (f_x + y) >> f_clos_ret
+main :prd: FunA by
+  apply(main_x :prd: FunA):
+    f >> apply(main_x)
 
-comatch g :prd: Fun(FunAA)A:
-  apply(g_F, g_ret): => g_F >> apply(a, g_ret)
-
-comatch main :prd: FunA:
-  apply'(main_x) => f >> apply'(main_x)
+main_g :con: FunAA:
+  g >> apply(main_g^p, DONE)
 -------------------------------------------
-drop(g_F |-> F, g_ret |-> DONE)
+drop(g_F |-> main_g^p, g_ret |-> DONE)
 -------------------------------------------
-codata Fun:
-  apply'' :con: Fun
+f :prd: FunA by
+  apply(f_x :prd: A):
+    f_clos >> main_g
 
-codata FunX:
-  apply'(:prd: X) :con: FunX
+f_clos :prd: FunAA by
+  apply(y :prd: A, f_clos_ret :con: A):
+    (f_x + y) >> f_clos_ret
 
-codata FunXY:
-  apply(:prd: X, :con: Y) :con: FunXY
+g :prd: Fun by
+  apply:
+    main_g^p >> apply(a, DONE)
 
-comatch f :prd: FunA:
-  apply'(f_x) => f_clos >> mu(F :prd: FunAA).g >> apply''
+main :prd: FunA by
+  apply(main_x :prd: FunA):
+    f >> apply(main_x)
 
-comatch f_clos :prd: FunAA:
-  apply(y, f_clos_ret) => (f_x + y) >> f_clos_ret
-
-comatch g :prd: Fun:
-  apply'': => F >> apply(a, DONE)
-
-comatch main :prd: FunA:
-  apply'(main_x) => f >> apply'(main_x)
+main_g :con: FunAA:
+  g >> apply
 -------------------------------------------
-drop(F |-> f_clos)
+drop(main_g^p |-> f_clos)
 -------------------------------------------
-codata Fun:
-  apply'' :con: Fun
+f :prd: FunA by
+  apply(f_x :prd: A):
+    f_clos >> main_g
 
-codata FunX:
-  apply'(:prd: X) :con: FunX
+f_clos :prd: FunAA by
+  apply(y :prd: A, f_clos_ret :con: A):
+    (f_x + y) >> f_clos_ret
 
-codata FunXY:
-  apply(:prd: X, :con: Y) :con: FunXY
+g :prd: Fun by
+  apply:
+    f_clos >> apply(a, DONE)
 
-comatch f :prd: FunA:
-  apply'(f_x) => g >> apply''
+main :prd: FunA by
+  apply(main_x :prd: FunA):
+    f >> apply(main_x)
 
-comatch f_clos :prd: FunAA:
-  apply(y, f_clos_ret) => (f_x + y) >> f_clos_ret
-
-comatch g :prd: Fun:
-  apply'': => f_clos >> apply(a, DONE)
-
-comatch main :prd: FunA:
-  apply'(main_x) => f >> apply'(main_x)
+main_g :con: FunAA:
+  g >> apply
 -------------------------------------------
 drop(f_clos_ret |-> DONE)
 -------------------------------------------
-codata Fun:
-  apply'' :con: Fun
+f :prd: FunA by
+  apply(f_x :prd: A):
+    f_clos >> main_g
 
-codata FunX:
-  apply'(:prd: X) :con: FunX
+f_clos :prd: FunA by
+  apply(y :prd: A):
+    (f_x + y) >> DONE
 
-codata FunXY:
-  apply(:prd: X, :con: Y) :con: FunXY
+g :prd: Fun by
+  apply:
+    f_clos >> apply(a)
 
-comatch f :prd: FunA:
-  apply'(f_x) => g >> apply''
+main :prd: FunA by
+  apply(main_x :prd: FunA):
+    f >> apply(main_x)
 
-comatch f_clos :prd: FunA:
-  apply'(y) => (f_x + y) >> DONE
-
-comatch g :prd: Fun:
-  apply'': => f_clos >> apply'(a)
-
-comatch main :prd: FunA:
-  apply'(main_x) => f >> apply'(main_x)
+main_g :con: FunAA:
+  g >> apply

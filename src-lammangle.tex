@@ -158,8 +158,7 @@ The judgement $\mangletm{\text{M}}{t^{\pol}}{t^{\pol\prime}}$ can be read like: 
       \text{M},
       \mathcal{L}_{e},
       T_{e}^{\prime},
-      \Sigma^{\prime\polprd},
-      \Sigma^{\prime\polcon}
+      \overline{\mathcal{D}^{\prime}\Sigma^{\prime\polprd}\Sigma^{\prime\polcon}}
     \right)
   \\[-3pt]
   &\quad
@@ -174,7 +173,7 @@ The judgement $\mangletm{\text{M}}{t^{\pol}}{t^{\pol\prime}}$ can be read like: 
   &\quad\quad
     \mathcal{L}^{\prime}
     =
-    fresh()
+    fresh(\mathcal{L})
   \\[-3pt]
   &\quad\quad
     \text{M}[\mathcal{L} \mapsto \mathcal{L}^{\prime}]
@@ -244,7 +243,7 @@ The judgement $\mangletm{\text{M}}{t^{\pol}}{t^{\pol\prime}}$ can be read like: 
   &\quad
     \mathcal{L}_{e}^{\prime}
     =
-    fresh()
+    fresh(\mathcal{L}_{e})
   \\[-3pt]
   &\quad
     \mathbf{match}\
@@ -259,7 +258,9 @@ The judgement $\mangletm{\text{M}}{t^{\pol}}{t^{\pol\prime}}$ can be read like: 
       \mathcal{C}
       \mapsto
       \prd T_{e}^{\prime}\ \by\
-      \overline{\mathcal{D}\Sigma^{\prime\polprd}\Sigma^{\prime\polcon} \colon c_{e}^{\prime}}
+      \overline{
+        \mathcal{D}^{\prime}\Sigma^{\prime\polprd}\Sigma^{\prime\polcon} \colon c_{e}^{\prime}
+      }
     \right]\
     \mathbf{where}\
     \overline{\mangletm{\text{M}}{c_{e}}{c_{e}^{\prime}}}

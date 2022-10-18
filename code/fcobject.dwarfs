@@ -2,8 +2,8 @@ TRAIT Foo
   Foo.bar1(y: A) -> A
   Foo.bar2() -> A
 
-f(x: A) -> Foo
-  return CLASS {
+f(x: A) -> Foo = return
+  CLASS {
     bar1(y) => return x+y,
     bar2() => return x
   }

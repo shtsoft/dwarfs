@@ -1,7 +1,6 @@
 %TODO
-% reread
-% contributions
 % citations
+% move example 1 to section 2
 \Authors{The whole introduction has become too long because it is probably somewhat too verbose and we should move some details to the second section.}
 \begin{quotation}
   Nowadays, many [well-designed] programming languages ([\ldots], Scala, [\ldots], Rust, etc.) support imperative \textit{and} functional programming.
@@ -189,15 +188,23 @@ The consumer-labels purpose is to direct the control flow which was implicit in 
 This paper makes the following contributions:
 \begin{itemize}
   \item
-    In \cref{sec:formalization} \ldots dwarfs-system blending core features of Thorin, codata and sequent calculus \ldots faithfully representing the core of modern OOP on a low level.
+    In \cref{sec:formalization} \ldots we formalize a language Dwarfs extending Thorin based on the sequent calculus formulation of codata to faithfully represent the core of modern OOP on a low level.
   \item
-    In \cref{sec:lammangle} \ldots adapted $\lambda$-mangling applicable to more general structural recursive programs (strict positivity) \ldots
+    In \cref{sec:lammangle} \ldots we adapt Thorin's $\lambda$-mangling and compare it.
   \item
-    In \ldots sequent core \ldots join points \ldots rewrite rules \ldots?
+    In \ldots rewrite rules?
   \item
-    \ldots code generation \ldots improving thorin with better termination analysis due to sequent calculus \ldots interleave lambda-mangling with rewrite rules
+    In \ldots join points?
   \item
-    benchmarks?
+    In \ldots we present a code generation algorithm improving Thorin's proposal by
+    \begin{itemize}
+      \item
+        leveraging the termination analysis based on strict positivity accompanying codata.?
+      \item
+        niftily interleaving lambda-mangling with rewrite rules.?
+    \end{itemize}
+  \item
+    In \ldots benchmarks?
 \end{itemize}
 The rest of the paper is structured as follows: \cref{sec:mainideas} presents the main ideas of the paper more verbosely. The subsequent sections deal with one of the contributions each before concluding with the almost obligatory \cref{sec:relatedwork} on related work and some concluding remarks in \cref{sec:conclusion}.
 

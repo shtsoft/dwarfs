@@ -2,7 +2,7 @@
 \begin{quotation}
   Nowadays, many [well-designed] programming languages ([\ldots], Scala, [\ldots], Rust, etc.) support imperative \textit{and} functional programming.
 \end{quotation}
-This is essentially how \cite{thorin} - an article on a novel kind of intermediate representation (IR) called Thorin - introduces.
+This is essentially how \cite{7e4a991f} - an article on a novel kind of intermediate representation (IR) called Thorin - introduces.
 What the author's try to convey with that sentence is that the paradigms installed in the source language should still be reflected in higher-level IRs in order to keep paradigm related information for optimization purposes.
 Of course, while already exposing the perks of ordinary IRs.
 The article demonstrates the power of that approach by presenting a simple transformation of Thorin programs subsuming {\glqq}many classical program transformations{\grqq}.
@@ -12,7 +12,7 @@ Most notably, $\lambda$-mangling makes many traditional closure conversions supe
 Now, functional programming has a younger brother: object-orientated programming (OOP).
 This relation becomes apparent in a traditional academic take on OOP where objects are modeled as (recursive) records of functions.
 But then being able to pass objects around is pretty much like higher-order functional programming.
-In fact, \cite{cook} argues that typical object-oriented programs use higher-order functions even more than many functional programs.
+In fact, \cite{cook09understanding} argues that typical object-oriented programs use higher-order functions even more than many functional programs.
 This suggests that it is worthwhile to generalize Thorin such that it reflects the OOP paradigm in lieu of only the functional one.
 And this is precisely what this paper is about.
 Namely, a new IR skeleton reflecting the imperative paradigm \textit{and} the object-oriented paradigm just like Thorin does with imperative and functional programming.
@@ -43,9 +43,9 @@ This is in analogy to how functions are inhabitants of types $T_{1} \to T_{2}$ p
 The type $\mu X.\, \lbrace \ell \colon T_{1} \to T_{2} \rbrace$ makes the analogy even more explicit by typing objects corresponding to functions.
 Interstingly, this reflects what we are up to regarding Thorin suggesting that we are on the right track.
 \\
-But besides procedural abstraction there is type abstraction leveraged by \cite{pierce} to formulate a model of OOP analogous to the one based on procedural abstraction.
+But besides procedural abstraction there is type abstraction leveraged by \cite{PierceTurner92} to formulate a model of OOP analogous to the one based on procedural abstraction.
 It has a relation to functions, too.
-More specifically, it extends ($\subset$) \cite{harper}'s definition of (typed) closures:\footnote{
+More specifically, it extends ($\subset$) \cite{10.1145/237721.237791}'s definition of (typed) closures:\footnote{
   Compare this to how the type of $\lambda$-lifted functions extends in the same way to some sort of type classes which are sometimes (mis)used for OOP purposes:
 \begin{align*}
   \exists
@@ -97,16 +97,16 @@ More specifically, it extends ($\subset$) \cite{harper}'s definition of (typed) 
 Interestingly, this suggests that we should avoid the type-abstracted model here since \cite{thorin} already identifies too early closure conversion as the main problem and working with a generalization thereof is most likely not any better.
 \\
 Yet the type-abstracted model contains a lesson on OOP by its relation to the procdurally-abstracted one.
-It is instructive to look at the commonalities and differences of the two models like \cite{cook} did.
+It is instructive to look at the commonalities and differences of the two models like \cite{cook09understanding} did.
 There the discussion revolves around the so-called {\glqq}autognostic prinicple{\grqq} which states that an object should only ever know itself and not the internals of others.
 One major point in that respect is that while the procedural approach ensures validity of the principle the typed one does not, making the difference between OOP and abstract data types apparent.
 Note that the typed approach does not ensure the principles validity because a method $\ell$ can use its knowledge on what $\textsc{Rep}$ precisely is.
 One way to still ensure the validity of the principle in that approach is to require the type abstraction $X \mapsto T_{1}[X] \times \cdots \times T_{n}[X]$ to use the abstracted parameter only in strictly positive positions.
-But in that case the type-abstracted model is a Church-encoding\footnote{See \cite{wadler} and \cite{gibbons}.} in System F of the greatest fixpoint the procedurally-abstracted model defines.
+But in that case the type-abstracted model is a Church-encoding\footnote{See \href{https://homepages.inf.ed.ac.uk/wadler/papers/free-rectypes/free-rectypes.txt}{https://homepages.inf.ed.ac.uk/wadler/papers/free-rectypes/free-rectypes.txt} and \cite{387458b4}.} in System F of the greatest fixpoint the procedurally-abstracted model defines.
 So in this case the models coincide.
 \\
 This is relevant in our context since their is a third model which coincides with the other two in the case of that strictly positive type-abstraction.
-Namely, a more recent view on greatest fixpoints in programming languages is strictly positive codata with copattern matching due to \cite{abel} where codata declarations are commonly written as interface
+Namely, a more recent view on greatest fixpoints in programming languages is strictly positive codata with copattern matching due to \cite{abel13copatterns} where codata declarations are commonly written as interface
 \begin{align*}
   &
   \mathbf{codata}\
@@ -116,7 +116,7 @@ Namely, a more recent view on greatest fixpoints in programming languages is str
 \end{align*}
 and $\ell$ are referred to as destructors.
 Codata has practical advantages comprising analogs of those of the view on least fixpoints with algebraic data types and pattern matching.
-But even more importantly, general codata, that is codata not subjected to a strict-positivity restriction, are a {\glqq}language-agnostic representation of procedural abstraction{\grqq} as \cite{codata in action} puts it making it a formulation of procedural abstraction like (existential) type abstraction is a formulation of abstract data types.
+But even more importantly, general codata, that is codata not subjected to a strict-positivity restriction, are a {\glqq}language-agnostic representation of procedural abstraction{\grqq} as \cite{downen2019codata} puts it making it a formulation of procedural abstraction like (existential) type abstraction is a formulation of abstract data types.
 This makes codata superior to recurive records when it comes to encoding the essence of OOP in a language as no additional constructs not primarily meant for OOP (like records and recursive types) are needed.
 Therefore, as our goal is to reify the essence of OOP - which we consider to be produrally-abstracted interfaces - in a Thorin-like language, instead of just adding records and recursive types to Thorin it is better to transfer Thorin's techniques to codata and copattern matching.
 And, in fact, it is what we shall pursue.
@@ -138,12 +138,12 @@ The obvious way is to regard destructor labels $\ell$ as function labels and lik
 But there is an interesting alternative with its roots in logic arising from the fact that a CPS-transformation embeds intuitionistic implications into classical implications: sequent calculus and its adequacy to formulate classical logic.
 \\
 To precisely understand why this alternative is better here we make some logical considerations.
-To this end we first interpret types as proposition as suggested in \cite{wadler}.
+To this end we first interpret types as proposition as discussed in \cite{10.1145/2699407}.
 Doing so identifies the type of continuations/consumers $T \to \bot$ with the natural deduction encoding of {\glqq}proposition $T$ is false{\grqq}.
 However, in sequent calculus {\glqq}is false{\grqq} is a primitive judgement just like {\glqq}is true{\grqq} is in natural deduction.
 Therefore it is not necessary to encode it using other judgments.
 As usual for primitive judgements, there are inference rules statically governing the judgement and {\glqq}is false{\grqq} is no different.
-Importantly, in that case, there are two kinds of those rules for the {\glqq}is false{\grqq}-judgement:\footnote{Also look at \cite{zeilberger} in this context.}
+Importantly, in that case, there are two kinds of those rules for the {\glqq}is false{\grqq}-judgement:\footnote{Also look at \cite{zeilberger2008unity} in this context.}
 \begin{enumerate}
   \item
     Rules to infer a refutation from other refutations (direct refutations).
@@ -167,8 +167,8 @@ So, in both sequent caclulus and natural deduction CPS control flow is syntactic
 In addition, the former is close enough to natural deduction direct style such that transferrin optimizations on control flow from there is an easy task.
 This makes sequent calculus a serious competitor to natural deduction CPS regarding IRs.
 \\
-The previous reasoning is essentially also how \cite{seqcore} argues for sequent calculus based IRs for functional languages like Haskell.
-In particular, \cite{seqcore} points out that rewriting stacks of function calls by user-defined rules becomes cumbersome in the CPS-transformed version due to the indirections added by the transformation to the already syntactically explicit control flow.
+The previous reasoning is essentially also how \cite{downen2016sequent} argues for sequent calculus based IRs for functional languages like Haskell.
+In particular, \cite{downen2016sequent} points out that rewriting stacks of function calls by user-defined rules becomes cumbersome in the CPS-transformed version due to the indirections added by the transformation to the already syntactically explicit control flow.
 Thorin would also suffer from that kind of problem if there were such rewrite rules as it is based on natural deduction CPS.
 And, of course, the problem would only become worse when generalizing Thorin to OOP with user-defined rewrite rules for stacks of messages.
 \\

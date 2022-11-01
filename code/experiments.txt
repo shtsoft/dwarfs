@@ -1,0 +1,130 @@
+-------
+Example
+-------
+f : A -> B
+f_cps : A x (B -> _|_) -> _|_
+
+g : B -> C
+g_cps : B x (C -> _|_) -> _|_
+
+g(f(a))
+
+Lambda-CPS
+f_cps(a, \(b : B).g_cps(b, DONE))
+
+SequentCalculus:
+f >> apply(a, mu(b : B).g >> apply(b, DONE))
+
+Dwarfs:
+g_mu := mu(b : B).g >> apply(b, DONE)
+f >> apply(a, g_mu)
+
+Thorin:
+g_help(b : B):
+  g_cps(b, DONE)
+f_cps(a, g_help)
+
+
+-------
+Example
+-------
+map f (map g xs)
+
+Lambda-CPS:
+map g (\h. h xs (\ys. map f (\h'. h' ys DONE)))
+
+SequentCalculus:
+map >> apply(g, apply(xs, mu(ys). map >> apply(f, apply(ys, DONE))))
+
+Dwarfs:
+f_mu := mu(ys). map >> apply(f, apply(ys, DONE))
+map >> apply(g, apply(xs, f_mu))
+
+Thorin:
+map(g, map_g_cont)
+map_g_cont(h):
+  h(xs, res_cont)
+map_res(ys):
+  map(f, map_f_cont)
+map_f_cont(h'):
+  h'(ys, DONE)
+
+SequentCore:
+let j = mu(ys). map >> f * ys * DONE in
+  jump j mu(ret). map >> g * xs * ret
+
+
+----------------------------
+NatDeductCPS-Syntax-Analysis
+----------------------------
+intro : A -> (B -> C)
+elim : (h : B -> C, b : B) -> C = h(b)
+elim(intro(a)) == direct_computation(a)
+
+
+-----------------
+Alt-Thorin-Syntax
+-----------------
+f(x: A) -> (A - > A) = return \y: A.x+y
+g(F: A -> A) -> A = return F(a)
+main(x) = g(f(x))
+
+f : { apply :: fn(f_x: A, f_ret: fn(fn(A, fn(A))) }:
+    f_ret.apply(f_clos)
+f_clos : { apply :: fn(y: A, f_clos_ret: fn(A)) }:
+    f_clos_ret.apply(f_x + y)
+g : { apply :: fn(g_F: fn(A, fn(A)), g_ret: fn(A)) }:
+    g_F.apply(a, g_ret)
+main : { apply :: fn(main_x: A)}:
+    f.apply(main_x, main_g)
+main_g : { apply :: fn(F: fn(A, fn(A)) }:
+    g.apply(F, DONE)
+
+
+------------
+Eta-Extend-.
+------------
+f : Stream {
+  head :: fn(self : Self, head_ret : fn(Int)),
+  tail :: fn(self : Self, tail_ret : fn(Self)) 
+}:
+  {
+    head :: head_ret.apply(0)
+    tail :: tail_ret.apply(f)
+  }
+
+f : Stream {
+  head :: () -> Int,
+  tail :: () -> Stream 
+}:
+
+f : Stream {
+  head :: Int,
+  tail :: Stream 
+}:
+  {
+    head = 0
+    tail = f
+  }
+
+f : Stream {
+  head :: fn(head_ret : fn(Int)),
+  tail :: fn(tail_ret : fn(Stream)) 
+}:
+  {
+    head :: head_ret.apply(0)
+    tail :: tail_ret.apply(f)
+  }
+
+HEAD : fn(x : Stream)
+  x.head(DONE)
+
+f.tail.head = f.tail(HEAD)
+
+f :prd: Stream by
+  head(head_ret :con: Int):
+    0 >> head_ret
+  tail(tail_ret :con: Stream):
+    f >> tail_ret
+
+f >> tail(head(DONE))

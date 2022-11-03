@@ -2,32 +2,31 @@
 \begin{quotation}
   Nowadays, many [well-designed] programming languages ([\ldots], Scala, [\ldots], Rust, etc.) support imperative \textit{and} functional programming.
 \end{quotation}
-This is essentially how \cite{7e4a991f} - an article on a novel kind of intermediate representation (IR) called Thorin - introduces.
-What the author's try to convey with that sentence is that the paradigms installed in the source language should still be reflected in higher-level IRs in order to keep paradigm related information for optimization purposes.
-Of course, while already exposing the perks of ordinary IRs.
+This is essentially how \citet{7e4a991f} - an article on a novel kind of intermediate representation (IR) called Thorin - introduces.
+What the authors try to convey with that sentence is that the paradigms installed in the source language should still be reflected in higher-level IRs, in order to keep paradigm-related information for optimization purposes.
+Of course, they should already expose the perks of ordinary IRs as well.
 The article demonstrates the power of that approach by presenting a simple transformation of Thorin programs subsuming {\glqq}many classical program transformations{\grqq}.
 It is called $\lambda$-mangling and resembles a partial evaluator which can be applied locally/scope-wise.
-Most notably, $\lambda$-mangling makes many traditional closure conversions superfluous. Therefore it reduces the cost of higher-order functional programming significantly and reliably.
+Most notably, $\lambda$-mangling makes many traditional closure conversions superfluous. Therefore, it reduces the cost of higher-order functional programming significantly and reliably.
 \\
-Now, functional programming has a younger brother: object-orientated programming (OOP).
+Now, functional programming has a younger brother: object-oriented programming (OOP).
 This relation becomes apparent in a traditional academic take on OOP where objects are modeled as (recursive) records of functions.
-But then being able to pass objects around is pretty much like higher-order functional programming.
-In fact, \cite{cook09understanding} argues that typical object-oriented programs use higher-order functions even more than many functional programs.
+Then, being able to pass objects around is pretty much like higher-order functional programming.
+In fact, \citet{cook09understanding} argues that typical object-oriented programs use higher-order functions even more than many functional programs.
 This suggests that it is worthwhile to generalize Thorin such that it reflects the OOP paradigm in lieu of only the functional one.
-And this is precisely what this paper is about.
-Namely, a new IR skeleton reflecting the imperative paradigm \textit{and} the object-oriented paradigm just like Thorin does with imperative and functional programming.
+And this is precisely what this paper is about, a new IR skeleton reflecting the imperative paradigm \textit{and} the object-oriented paradigm just like Thorin does with imperative and functional programming.
 \\
 The main question is how to incorporate the OOP paradigm into Thorin in a fruitful way.
-A priori, it is clear that there are at least two things to consider in an attempt to answer that question.
+A priori, it is clear that there are at least two things to consider in an attempt to answer this question.
 On the one hand, the object representation should not be too low-level.
-Otherwise it is to expect to run into problems similar to those Thorin acctually tries to solve for closures but this time more generally for objects.
-On the other hand, it should be in tune with Thorin - i.p. w.r.t. the always non-returning functions and the meta-level scoping.
-After all this is what makes $\lambda$-mangling so powerful and simple.
-What now follows is a discussion on the answer of that question along these two considerations.
+Otherwise it is to be expected that we will run into problems similar to those Thorin acctually tries to solve for closures, but this time more generally for objects.
+On the other hand, it should be in tune with Thorin - in particular w.r.t. the always non-returning nature of functions and the meta-level scoping.
+After all, this is what makes $\lambda$-mangling so powerful and simple.
+In the following, we will discuss the answer of the above question along these two considerations.
 \\
 To adhere to the former consideration it is advisable to avoid pointers altogether.
-Moreover staying in the realms of academics promises to find well-understood work on the formalization of OOP.
-Indeed, a good starting point seems to be the previously addressed recursive records as they played an important role in the motivation for this paper.
+Moreover, we should take a look at the well-understood work on the formalization of OOP in the realms of academics.
+Indeed, a good starting point seems to be the model of recursive records as mentioned above.
 In that model of OOP, objects are inhabtiants of recursive record types
 \begin{align*}
   \mu X
@@ -38,14 +37,14 @@ In that model of OOP, objects are inhabtiants of recursive record types
     \ell_{n} \colon T_{n}[\textsc{X}]
   \rbrace
 \end{align*}
-procedurally abstracting ambient variables hiding the object's state.
-This is in analogy to how functions are inhabitants of types $T_{1} \to T_{2}$ procedurally abstracting ambient variables hiding the functions environment.
+\emph{procedurally abstracting} ambient variables hiding the object's state.
+This is in analogy to how functions are inhabitants of types $T_{1} \to T_{2}$, procedurally abstracting ambient variables hiding the functions environment.
 The type $\mu X.\, \lbrace \ell \colon T_{1} \to T_{2} \rbrace$ makes the analogy even more explicit by typing objects corresponding to functions.
-Interstingly, this reflects what we are up to regarding Thorin suggesting that we are on the right track.
+Interestingly, this reflects what we are up to regarding Thorin, suggesting that we are on the right track.
 \\
-But besides procedural abstraction there is type abstraction leveraged by \cite{PierceTurner92} to formulate a model of OOP analogous to the one based on procedural abstraction.
+However, besides procedural abstraction there also is \emph{type abstraction} as leveraged by \citet{PierceTurner92} to formulate a model of OOP analogous to the one based on procedural abstraction.
 It has a relation to functions, too.
-More specifically, it extends ($\subset$) \cite{10.1145/237721.237791}'s definition of (typed) closures:\footnote{
+More specifically, it extends \citet{10.1145/237721.237791}'s definition of (typed) closures:\footnote{
   Compare this to how the type of $\lambda$-lifted functions extends in the same way to some sort of type classes which are sometimes (mis)used for OOP purposes:
 \begin{align*}
   \exists
@@ -94,19 +93,19 @@ More specifically, it extends ($\subset$) \cite{10.1145/237721.237791}'s definit
     \rbrace
   \right)
 \end{align*}
-Interestingly, this suggests that we should avoid the type-abstracted model here since \cite{thorin} already identifies too early closure conversion as the main problem and working with a generalization thereof is most likely not any better.
+This suggests that we should avoid the type-abstracted model here since \citet{7e4a991f} already identify too early closure conversion as the main problem and working with a generalization thereof is most likely not any better.
 \\
-Yet the type-abstracted model contains a lesson on OOP by its relation to the procdurally-abstracted one.
-It is instructive to look at the commonalities and differences of the two models like \cite{cook09understanding} did.
-There the discussion revolves around the so-called {\glqq}autognostic prinicple{\grqq} which states that an object should only ever know itself and not the internals of others.
-One major point in that respect is that while the procedural approach ensures validity of the principle the typed one does not, making the difference between OOP and abstract data types apparent.
-Note that the typed approach does not ensure the principles validity because a method $\ell$ can use its knowledge on what $\textsc{Rep}$ precisely is.
-One way to still ensure the validity of the principle in that approach is to require the type abstraction $X \mapsto T_{1}[X] \times \cdots \times T_{n}[X]$ to use the abstracted parameter only in strictly positive positions.
+Nevertheless, the type-abstracted model contains a lesson on OOP in its relation to the procdurally-abstracted one.
+It is instructive to look at the commonalities and differences of the two models as \citet{cook09understanding} did.
+There, the discussion revolves around the so-called \emph{autognostic prinicple} which states that an object should only ever know itself and not the internals of other objects.
+One major point in that respect is that while the procedural approach ensures validity of the principle, the typed one does not, making the difference between OOP and abstract data types apparent.
+Note that the type-abstraction approach does not ensure the principle's validity in general because a method $\ell$ can use its knowledge on what $\textsc{Rep}$ precisely is.
+One way to still ensure the validity of autognosis in that approach is to require the type abstraction $X \mapsto T_{1}[X] \times \cdots \times T_{n}[X]$ to use the abstracted parameter only in strictly positive positions.
 But in that case the type-abstracted model is a Church-encoding\footnote{See \href{https://homepages.inf.ed.ac.uk/wadler/papers/free-rectypes/free-rectypes.txt}{https://homepages.inf.ed.ac.uk/wadler/papers/free-rectypes/free-rectypes.txt} and \cite{387458b4}.} in System F of the greatest fixpoint the procedurally-abstracted model defines.
 So in this case the models coincide.
 \\
-This is relevant in our context since their is a third model which coincides with the other two in the case of that strictly positive type-abstraction.
-Namely, a more recent view on greatest fixpoints in programming languages is strictly positive codata with copattern matching due to \cite{abel13copatterns} where codata declarations are commonly written as interface
+This is relevant in our context since there is a third model coinciding with the other two in the case of strictly positive type-abstraction.
+Namely, a more recent view on greatest fixpoints in programming languages is strictly positive \emph{codata with copattern matching}, due to \cite{abel13copatterns}. Codata declarations are commonly written as interface
 \begin{align*}
   &
   \mathbf{codata}\
@@ -114,12 +113,12 @@ Namely, a more recent view on greatest fixpoints in programming languages is str
   \mathbf{where}\
   \overline{\textsc{D}.\ell\,\overline{T} \to T[\textsc{D}]}
 \end{align*}
-and $\ell$ are referred to as destructors.
-Codata has practical advantages comprising analogs of those of the view on least fixpoints with algebraic data types and pattern matching.
-But even more importantly, general codata, that is codata not subjected to a strict-positivity restriction, are a {\glqq}language-agnostic representation of procedural abstraction{\grqq} as \cite{downen2019codata} puts it making it a formulation of procedural abstraction like (existential) type abstraction is a formulation of abstract data types.
+and the $\ell$ are referred to as destructors.
+Codata has practical advantages analogous to those viewing least fixpoints as algebraic data types and pattern matching.
+But even more importantly, general codata, that is codata not subjected to a strict-positivity restriction, are a {\glqq}language-agnostic representation of procedural abstraction{\grqq} as \citet{downen2019codata} put it, making it a formulation of procedural abstraction in the same way as (existential) type abstraction is a formulation of abstract data types.
 This makes codata superior to recurive records when it comes to encoding the essence of OOP in a language as no additional constructs not primarily meant for OOP (like records and recursive types) are needed.
 Therefore, as our goal is to reify the essence of OOP - which we consider to be produrally-abstracted interfaces - in a Thorin-like language, instead of just adding records and recursive types to Thorin it is better to transfer Thorin's techniques to codata and copattern matching.
-And, in fact, it is what we shall pursue.
+And, in fact, this is what we shall pursue.
 \\
 At this point some might complain about the lack of subtyping and inheritance in our chosen approach.
 To those we reply that both features are orthogonal to codata and that neither subtyping nor inheritance is really essential to OOP.
@@ -127,23 +126,23 @@ They are rather mechanisms borrowed from other fields interacting with the essen
 Subtyping rather belongs to type theory.
 And inheritance is actually a code sharing mechanism which applies to data and pattern matching alike, for example.
 On top of that, inheritance is debatable from a language design perspective as it can impair modularity - one of the most advantageous properties of OOP - depending on the kind of inheritance in use.
-Therefore adding those features only adds complexity to the setting without any obvious benefits.
+Therefore, adding those features only adds complexity to the setting without any obvious benefits.
+\\\\
+Having established codata as the core of the proposed IR, let us think about a formalization which is in tune with Thorin.
+Recall that for this point we wanted to put special attention on the non-returning nature functions and the meta-level scoping.
+In fact, it will be sufficient to somehow make objects consist of non-returning functions and then adapt Thorin's notion of scoping.
 \\
-Having established codata as the core of the proposed IR let us think about a formalization thereof which is in tune with Thorin.
-This is the second point we wanted to take into account with special attention on the always non-returning functions and the meta-level scoping.
-In fact, it will be sufficient to somehow make the objects consist of non-returning functions and then adapt Thorin's notion of scoping.
-\\
-So we should ask how to make producers of codata to behave as a bunch of non-returning functions.
+So we should ask how to make producers of codata behave as a bunch of non-returning functions.
 The obvious way is to regard destructor labels $\ell$ as function labels and like Thorin turn their signature $(T_{1}, \ldots, T_{n}) \to T$ into the according CPS-form $(T_{1}, \ldots, T_{n}, (T \to \bot)) \to \bot$.
 But there is an interesting alternative with its roots in logic arising from the fact that a CPS-transformation embeds intuitionistic implications into classical implications: sequent calculus and its adequacy to formulate classical logic.
 \\
-To precisely understand why this alternative is better here we make some logical considerations.
-To this end we first interpret types as proposition as discussed in \cite{10.1145/2699407}.
+To precisely understand why this alternative better suits our needs, we make some logical considerations.
+We interpret types as propositions as discussed in \cite{10.1145/2699407}.
 Doing so identifies the type of continuations/consumers $T \to \bot$ with the natural deduction encoding of {\glqq}proposition $T$ is false{\grqq}.
-However, in sequent calculus {\glqq}is false{\grqq} is a primitive judgement just like {\glqq}is true{\grqq} is in natural deduction.
-Therefore it is not necessary to encode it using other judgments.
-As usual for primitive judgements, there are inference rules statically governing the judgement and {\glqq}is false{\grqq} is no different.
-Importantly, in that case, there are two kinds of those rules for the {\glqq}is false{\grqq}-judgement:\footnote{Also look at \cite{zeilberger2008unity} in this context.}
+However, in sequent calculus {\glqq}is false{\grqq} is a primitive judgment just as {\glqq}is true{\grqq} is in natural deduction.
+Hence, it is not necessary to encode it using other judgments.
+As usual for primitive judgments, there are inference rules statically governing them, and {\glqq}is false{\grqq} is no different.
+Importantly, there are two kinds of those rules for the {\glqq}is false{\grqq}-judgment:\footnote{Also confer \cite{zeilberger2008unity} in this context.}
 \begin{enumerate}
   \item
     Rules to infer a refutation from other refutations (direct refutations).
@@ -151,7 +150,7 @@ Importantly, in that case, there are two kinds of those rules for the {\glqq}is 
     For example, a refutation of $A \lor B$ can be inferred from a refutation of $A$ and a refutation of $B$.
   \item
     A rule to infer a refutation from a certain contradiction (indirect refutations).
-    Explicitly, if one has a contradiction $c$ assuming a proof of $A$ then one can infer a refutation of $A$.
+    Explicitly, if one has a contradiction $c$ assuming a proof of $A$, one can infer a refutation of $A$.
 \end{enumerate}
 Thus, a Curry-Howard reading of sequent calculus suggests to differ two kinds of continuations/consumers accordingly:
 \begin{enumerate}
@@ -160,47 +159,49 @@ Thus, a Curry-Howard reading of sequent calculus suggests to differ two kinds of
   \item
     Continuations corresponding to jumps to another stack of messages to be passed to an object. This is control flow which is not syntactically explicit in natural deduction.
 \end{enumerate}
-Crucially, the difference is reflected on the language-construct-level exactly mirroring how control flow is syntactically explicit in natural deduction.
-This is opposed to natural deduction CPS where all control flow is syntactically explicit in a uniform manner requiring syntactic analysis to make the distinction.
+Crucially, the difference is reflected on the language-construct level, exactly mirroring how control flow is syntactically explicit in natural deduction.
+This is opposed to natural-deduction CPS where all control flow is syntactically explicit in a uniform manner requiring syntactic analysis to regain the distinction.
 In particular, the control flow syntactically explicit in natural deduction is blurred then.
-So, in both sequent caclulus and natural deduction CPS control flow is syntactically explicit but the former is a refinement of the latter.
-In addition, the former is close enough to natural deduction direct style such that transferrin optimizations on control flow from there is an easy task.
-This makes sequent calculus a serious competitor to natural deduction CPS regarding IRs.
+So, in both sequent caclulus and natural-deduction CPS control flow is syntactically explicit but the former is a refinement of the latter.
+In addition, the former is close enough to natural-deduction direct-style such that transferring optimizations on control flow from there is an easy task.
+This makes sequent calculus a serious competitor to natural-deduction CPS regarding IRs.
 \\
-The previous reasoning is essentially also how \cite{downen2016sequent} argues for sequent calculus based IRs for functional languages like Haskell.
-In particular, \cite{downen2016sequent} points out that rewriting stacks of function calls by user-defined rules becomes cumbersome in the CPS-transformed version due to the indirections added by the transformation to the already syntactically explicit control flow.
-Thorin would also suffer from that kind of problem if there were such rewrite rules as it is based on natural deduction CPS.
+The previous reasoning is essentially how \citet{downen2016sequent} argue for sequent-calculus based IRs for functional languages like Haskell.
+In particular, \citet{downen2016sequent} point out that rewriting stacks of function calls by user-defined rules becomes cumbersome in the CPS-transformed version due to the indirections added by the transformation to the already syntactically explicit control flow.
+Thorin would also suffer from that kind of problem if there were such rewrite rules, as it is based on natural-deduction CPS.
 And, of course, the problem would only become worse when generalizing Thorin to OOP with user-defined rewrite rules for stacks of messages.
 \\
 All in all, basing our proposed IR on sequent calculus promises to be a good idea and hence we will do so.
-The remaining question is then how to harmonize sequent calculus with meta-level scoping.
+The remaining question then is how to harmonize sequent calculus with meta-level scoping.
 Note that Thorin's meta-level scoping works roughly as follows:
 Functions are given labels and the arguments of the functions can be referred to by an index on the label from within the whole program.
-Scope then originate from a liveness analysis.
-Fortunately, Thorin's technique straightforwardly generalizes to sequent calculus.
-One only has to make a distinction between producer-labels and consumer-labels according to the two judgements of {\glqq}is true{\grqq} and {\glqq}is false{\grqq} of sequent calculus.
-Here the producer-labels generalize Thorin's function-labels to object-labels making jumps according to the messages passed by the first kind of continuation.
-The consumer-labels purpose is to direct the control flow which was implicit in the source program and mediate between producer-labels.
-\\
-This paper makes the following contributions:
+Scopes then originate from a liveness analysis.
+Fortunately, Thorin's technique generalizes to sequent calculus almost straightforwardly.
+One only has to make a distinction between producer-labels and consumer-labels according to the two judgments of {\glqq}is true{\grqq} and {\glqq}is false{\grqq} of sequent calculus.
+Here producer-labels generalize Thorin's function-labels to object-labels making jumps according to the messages passed by the first kind of continuation.
+The purpose of consumer-labels is to direct the control flow that was implicit in the source program and mediate between producer-labels.
+\\\\
+This paper now makes the following contributions:
 \begin{itemize}
   \item
-    In \cref{sec:formalization} \ldots we formalize a language Dwarfs extending Thorin based on the sequent calculus formulation of codata to faithfully represent the core of modern OOP on a low level.
+    In \cref{sec:formalization} \ldots we formalize a language Dwarfs extending Thorin based on the sequent-calculus formulation of codata to faithfully represent the core of modern OOP on a low level.
   \item
-    In \cref{sec:lammangle} \ldots we adapt Thorin's $\lambda$-mangling and compare it.
+    In \cref{sec:lammangle} \ldots we adapt Thorin's $\lambda$-mangling to our language and compare it.
   \item
     In \ldots rewrite rules?
   \item
     In \ldots join points?
   \item
-    In \ldots we present a code generation algorithm improving Thorin's proposal by
+    In \ldots data types and pattern matching?
+  \item
+    In \ldots we present a code-generation algorithm improving(?) Thorin's proposal by
     \begin{itemize}
       \item
-        leveraging the termination analysis based on strict positivity accompanying codata.?
-      \item
         niftily interleaving lambda-mangling with rewrite rules.?
+      \item
+        \ldots?
     \end{itemize}
   \item
     In \ldots benchmarks?
 \end{itemize}
-The rest of the paper is structured as follows: \cref{sec:mainideas} presents the main ideas of the paper more verbosely. The subsequent sections deal with one of the contributions each before concluding with the almost obligatory \cref{sec:relatedwork} on related work and some concluding remarks in \cref{sec:conclusion}.
+The rest of the paper is structured as follows: \cref{sec:mainideas} presents the main ideas of the paper in more detail. The subsequent sections deal with one of the contributions each, before concluding with \cref{sec:relatedwork} on related work and some concluding remarks in \cref{sec:conclusion}.

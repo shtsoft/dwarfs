@@ -123,12 +123,12 @@ The syntax is defined in \cref{fig:?:syntax}.
   \label{fig:?:syntax}
 \end{figure}
 
-\subsection{Semantic}
+\subsection{Semantics}
 Define environments $\sigma$ as records
 
 \begin{align*}
   \left\lbrace
-    C:
+    \mathsf{C}:
       \textsc{Ctor}
       \to
       \text{List}
@@ -139,8 +139,8 @@ Define environments $\sigma$ as records
         \left(
           V^{\polcon} \times \ldots \times V^{\polcon}
         \right)
-      \right);
-    M: \mu\textsc{Abs} \to V^{\polprd}
+      \right);\;
+    \mathsf{M}: \mu\textsc{Abs} \to V^{\polprd}
   \right\rbrace
 \end{align*}
 mutually recursive with
@@ -177,7 +177,7 @@ mutually recursive with
     \\[0.5cm]
   \end{array}
 \]
-The judgement $\semtm{\sigma}{t^{\pol}}{t^{\pol\prime}}$ can be read like: For some environment $\sigma$ $\pol$-term $t^{\pol}$ reduces to $\pol$-term $t^{\pol\prime}$.
+The judgment $\semtm{\sigma}{t^{\pol}}{t^{\pol\prime}}$ can be read like: For some environment $\sigma$, $\pol$-term $t^{\pol}$ reduces to $\pol$-term $t^{\pol\prime}$.
 
 \begin{prooftree}
   \AxiomC{$
@@ -195,7 +195,7 @@ The judgement $\semtm{\sigma}{t^{\pol}}{t^{\pol\prime}}$ can be read like: For s
 
 \begin{prooftree}
   \AxiomC{$
-    \text{Vals}(\sigma.C[\mathcal{C}], \mathcal{D})
+    \text{Vals}(\sigma.\mathsf{C}[\mathcal{C}], \mathcal{D})
     =
     \left(
       \left(
@@ -216,33 +216,8 @@ The judgement $\semtm{\sigma}{t^{\pol}}{t^{\pol\prime}}$ can be read like: For s
 \vspace*{0.3cm}
 
 \begin{prooftree}
-  \AxiomC{}
-  \RightLabel{\textsc{E-Tm-Ctor}}
-  \UnaryInfC{$
-    \semtm
-      {\sigma}
-      {\mathcal{C}}
-      {\langle \mathcal{C}, \sigma \rangle}
-  $}
-\end{prooftree}
-\vspace*{0.3cm}
-
-\begin{prooftree}
   \AxiomC{$
-    \sigma.M[\mathcal{M}]
-    =
-    v^{\polprd}
-  $}
-  \RightLabel{\textsc{E-Tm-$\mu$-Param}}
-  \UnaryInfC{$
-    \semtm{\sigma}{\mathcal{M}_{i}}{v^{\polprd}}
-  $}
-\end{prooftree}
-\vspace*{0.3cm}
-
-\begin{prooftree}
-  \AxiomC{$
-    \text{Vals}(\sigma.C[\mathcal{C}], \mathcal{D})
+    \text{Vals}(\sigma.\mathsf{C}[\mathcal{C}], \mathcal{D})
     =
     \left(
       \left(
@@ -257,7 +232,44 @@ The judgement $\semtm{\sigma}{t^{\pol}}{t^{\pol\prime}}$ can be read like: For s
   $}
   \RightLabel{\textsc{E-Tm-$\polcon$-Param}}
   \UnaryInfC{$
-    \semtm{\sigma}{\mathcal{C}\text{-}\mathcal{D}_{i}}{v_{i}^{\polprd}}
+    \semtm{\sigma}{\mathcal{C}\text{-}\mathcal{D}_{i}}{v_{i}^{\polcon}}
+  $}
+\end{prooftree}
+\vspace*{0.3cm}
+
+\begin{prooftree}
+  \AxiomC{}
+  \RightLabel{\textsc{E-Tm-Ctor}}
+  \UnaryInfC{$
+    \semtm
+      {\sigma}
+      {\mathcal{C}}
+      {\langle \mathcal{C}, \sigma \rangle}
+  $}
+\end{prooftree}
+\vspace*{0.3cm}
+
+\begin{prooftree}
+  \AxiomC{$
+    \sigma.\mathsf{M}[\mathcal{M}]
+    =
+    v^{\polprd}
+  $}
+  \RightLabel{\textsc{E-Tm-$\mu$-Param}}
+  \UnaryInfC{$
+    \semtm{\sigma}{\mathcal{M}^{p}}{v^{\polprd}}
+  $}
+\end{prooftree}
+\vspace*{0.3cm}
+
+\begin{prooftree}
+  \AxiomC{}
+  \RightLabel{\textsc{E-Tm-$\mu$Abs}}
+  \UnaryInfC{$
+    \semtm
+      {\sigma}
+      {\mathcal{M}}
+      {\langle \mathcal{M}, \sigma \rangle}
   $}
 \end{prooftree}
 \vspace*{0.3cm}
@@ -279,18 +291,6 @@ The judgement $\semtm{\sigma}{t^{\pol}}{t^{\pol\prime}}$ can be read like: For s
 \end{prooftree}
 \vspace*{0.3cm}
 
-\begin{prooftree}
-  \AxiomC{}
-  \RightLabel{\textsc{E-Tm-$\mu$Abs}}
-  \UnaryInfC{$
-    \semtm
-      {\sigma}
-      {\mathcal{M}}
-      {\langle \mathcal{M}, \sigma \rangle}
-  $}
-\end{prooftree}
-\vspace*{0.3cm}
-
 \[
   \begin{array}{lclr}
     % machine states
@@ -304,7 +304,7 @@ The judgement $\semtm{\sigma}{t^{\pol}}{t^{\pol\prime}}$ can be read like: For s
     \\[0.5cm]
   \end{array}
 \]
-The judgement $\semcmd{P}{s}{s^{\prime}}$ can be read like: In the context of a program $P$ there is a machine step from state $s$ to state $s^{\prime}$.
+The judgment $\semcmd{P}{s}{s^{\prime}}$ can be read like: In the context of a program $P$ there is a machine step from state $s$ to state $s^{\prime}$.
 
 \begin{prooftree}
   \AxiomC{$
@@ -362,7 +362,7 @@ The judgement $\semcmd{P}{s}{s^{\prime}}$ can be read like: In the context of a 
     \semcmd
       {P}
       {\statecon{\sigma}{\mathcal{M}}}
-      {\statecon{\sigma^{\prime}[\mathcal{M}^{p} \mapsto v^{\polprd}]}{\mathcal{M}^{\prime}}}
+      {\statecon{\sigma^{\prime}[\mathcal{M}^{\prime p} \mapsto v^{\polprd}]}{\mathcal{M}^{\prime}}}
   $}
 \end{prooftree}
 \vspace*{0.3cm}
@@ -377,7 +377,7 @@ The judgement $\semcmd{P}{s}{s^{\prime}}$ can be read like: In the context of a 
     \semtm{\sigma}{t^{\polprd}}{v^{\polprd}}
   $}
   \AxiomC{$
-    \semtm{\sigma}{t^{\polcon}}{\langle \mathcal{M}^{\prime}, \sigma^{\prime} \rangle}
+    \semtm{\sigma}{t^{\polcon}}{\langle \mathcal{M}, \sigma^{\prime} \rangle}
   $}
   \RightLabel{\textsc{E-Cmd-Ctor-$\mu$Abs}}
   \TrinaryInfC{$
@@ -429,13 +429,13 @@ The judgement $\semcmd{P}{s}{s^{\prime}}$ can be read like: In the context of a 
 
 \subsection{Typing}
 
-The judgement $\typetmprd{\sigma}{t^{\polprd}}{T}$ can be read like: In the context of a program $P$ the $\polprd$-term $t^{\polprd}$ is a producer of type $T$.
+The judgment $\typetmprd{\sigma}{t^{\polprd}}{T}$ can be read as: In the context of a program $P$ the $\polprd$-term $t^{\polprd}$ is a producer of type $T$.
 \\
-The judgement $\typetmcon{\sigma}{t^{\polcon}}{T}$ can be read like: In the context of a program $P$ the $\polcon$-term $t^{\polcon}$ is a consumer of type $T$.
+The judgment $\typetmcon{\sigma}{t^{\polcon}}{T}$ can be read as: In the context of a program $P$ the $\polcon$-term $t^{\polcon}$ is a consumer of type $T$.
 \\
-The judgement $\typecmd{P}{c}$ can be read like: In the context of a program $P$ the command $c$ well-formed.
+The judgment $\typecmd{P}{c}$ can be read as: In the context of a program $P$ the command $c$ well-formed.
 \\
-The judgement $\typewf{P}$ can be read like: The program $P$ is well-formed.
+The judgment $\typewf{P}$ can be read as: The program $P$ is well-formed.
 
 \begin{prooftree}
   \AxiomC{$
@@ -467,7 +467,7 @@ The judgement $\typewf{P}$ can be read like: The program $P$ is well-formed.
   \AxiomC{$
     P.C[\mathcal{C}]
     =
-    \by\ \ldots \mathcal{D}\Sigma^{\polprd}\Sigma^{\polcon} \ldots
+    \ldots\ \by\ \ldots \mathcal{D}\Sigma^{\polprd}\Sigma^{\polcon} \ldots
   $}
   \AxiomC{$
     T
@@ -477,6 +477,40 @@ The judgement $\typewf{P}$ can be read like: The program $P$ is well-formed.
   \RightLabel{\textsc{Tm-$\polprd$-Param}}
   \BinaryInfC{$
     \typetmprd{P}{\mathcal{C}\text{-}\mathcal{D}^{i}}{T}
+  $}
+\end{prooftree}
+\vspace*{0.3cm}
+
+\begin{prooftree}
+  \AxiomC{$
+    P.C[\mathcal{C}]
+    =
+    \ldots\ \by\ \ldots \mathcal{D}\Sigma^{\polprd}\Sigma^{\polcon} \ldots
+  $}
+  \AxiomC{$
+    T
+    =
+    \Sigma^{\polcon}(i)
+  $}
+  \RightLabel{\textsc{Tm-$\polcon$-Param}}
+  \BinaryInfC{$
+    \typetmcon{P}{\mathcal{C}\text{-}\mathcal{D}_{i}}{T}
+  $}
+\end{prooftree}
+\vspace*{0.3cm}
+
+\begin{prooftree}
+  \AxiomC{$
+    P.M[\mathcal{M}]
+    =
+    \con
+    T
+    \colon
+    c
+  $}
+  \RightLabel{\textsc{Tm-$\mu$Abs}}
+  \UnaryInfC{$
+    \typetmcon{P}{\mathcal{M}}{T}
   $}
 \end{prooftree}
 \vspace*{0.3cm}
@@ -493,24 +527,6 @@ The judgement $\typewf{P}$ can be read like: The program $P$ is well-formed.
   \RightLabel{\textsc{Tm-$\mu$-Param}}
   \UnaryInfC{$
     \typetmprd{P}{\mathcal{M}^{p}}{T}
-  $}
-\end{prooftree}
-\vspace*{0.3cm}
-
-\begin{prooftree}
-  \AxiomC{$
-    P.C[\mathcal{C}]
-    =
-    \by\ \ldots \mathcal{D}\Sigma^{\polprd}\Sigma^{\polcon} \ldots
-  $}
-  \AxiomC{$
-    T
-    =
-    \Sigma^{\polcon}(i)
-  $}
-  \RightLabel{\textsc{Tm-$\polcon$-Param}}
-  \BinaryInfC{$
-    \typetmcon{P}{\mathcal{C}\text{-}\mathcal{D}_{i}}{T}
   $}
 \end{prooftree}
 \vspace*{0.3cm}
@@ -539,22 +555,6 @@ The judgement $\typewf{P}$ can be read like: The program $P$ is well-formed.
 
 \begin{prooftree}
   \AxiomC{$
-    P.M[\mathcal{M}]
-    =
-    \con
-    T
-    \colon
-    c
-  $}
-  \RightLabel{\textsc{Tm-$\mu$Abs}}
-  \UnaryInfC{$
-    \typetmcon{P}{\mathcal{M}}{T}
-  $}
-\end{prooftree}
-\vspace*{0.3cm}
-
-\begin{prooftree}
-  \AxiomC{$
     \typetmprd{P}{t^{\polprd}}{T}
   $}
   \AxiomC{$
@@ -569,7 +569,7 @@ The judgement $\typewf{P}$ can be read like: The program $P$ is well-formed.
 
 \begin{prooftree}
   \AxiomC{$\forall \mathcal{C} \in \text{dom}(P.C).\, \overline{\typecmd{P}{c}}$}
-  \AxiomC{$\typecmd{P}{c}$}
+  \AxiomC{$\forall \mathcal{M} \in \text{dom}(P.M).\, \typecmd{P}{c}$}
   \RightLabel{\textsc{Wf-Program}}
   \BinaryInfC{$
     \typewf{
@@ -588,7 +588,7 @@ The judgement $\typewf{P}$ can be read like: The program $P$ is well-formed.
 \subsection{Liveness}
 Let $\textsc{Label} := \mu\textsc{Abs} \cup \textsc{Ctor}$ and $\mathcal{L} \in \textsc{Label}$.
 \\
-The judgement $\liveness{P}{\mathcal{L}}{\mathcal{L}^{\prime}}$ can be read like: In program $P$ the $\pol$-label $\mathcal{L}$ is live in the $\pol$-label $\mathcal{L}^{\prime}$.
+The judgment $\liveness{P}{\mathcal{L}}{\mathcal{L}^{\prime}}$ can be read as: In program $P$ the label $\mathcal{L}$ is live in the label $\mathcal{L}^{\prime}$.
 \\
 Define $\textsc{Scope}_{P}(\mathcal{L}_{e}) := \lbrace \mathcal{L} \,|\, \liveness{P}{\mathcal{L}_{e}}{\mathcal{L}} \rbrace$ where
 \\
@@ -613,20 +613,16 @@ Define $\textsc{Scope}_{P}(\mathcal{L}_{e}) := \lbrace \mathcal{L} \,|\, \livene
   \AxiomC{$\mathcal{M} \neq \mathcal{M}^{\prime}$}
   \AxiomC{$P.M[\mathcal{M}^{\prime}] = \ldots c_{\mathcal{M}^{\prime}}$}
   \AxiomC{$
-    \exists
-    i.\,
     \mathcal{M}^{p} \leq c_{\mathcal{M}^{\prime}}
   $}
   \RightLabel{\textsc{Live-$\mu$-Param}}
-  \TrinaryInfC{$\liveness{P}{\mathcal{M}}{\mathcal{C}^{\prime}}$}
+  \TrinaryInfC{$\liveness{P}{\mathcal{M}}{\mathcal{M}^{\prime}}$}
 \end{prooftree}
 \vspace*{0.3cm}
 
 \begin{prooftree}
   \AxiomC{$P.C[\mathcal{C}] = \ldots \overline{c_{\mathcal{C}}}$}
   \AxiomC{$
-    \exists
-    i.\,
     \exists
     c
     \in

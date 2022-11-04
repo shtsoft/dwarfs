@@ -19,7 +19,7 @@ g :prd: Fun(FunAA)A by
     g_F >> apply(a, g_ret)
 
 main :prd: FunA by
-  apply(main_x :prd: FunA):
+  apply(main_x :prd: A):
     f >> apply(main_x, main_g)
 
 main_g :con: FunAA:

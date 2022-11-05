@@ -1,8 +1,8 @@
 Let $\text{M} \colon (t^{\polprd} \to t^{\polprd}) \lor (t^{\polcon} \to t^{\polcon})$.
 \\
-The judgement $\manglecmd{\text{M}}{c}{c^{\prime}}$ can be read like: Given the mangle-map $\text{M}$ then the command $c$ reduces to the command $c^{\prime}$.
+The judgment $\manglecmd{\text{M}}{c}{c^{\prime}}$ can be read as: Given the mangle-map $\text{M}$ then the command $c$ reduces to the command $c^{\prime}$.
 \\
-The judgement $\mangletm{\text{M}}{t^{\pol}}{t^{\pol\prime}}$ can be read like: Given the mangle-map $\text{M}$ then the $\pol$-term $t^{\pol}$ reduces to the $\pol$-term $t^{t^{\pol}\prime}$.
+The judgment $\mangletm{\text{M}}{t^{\pol}}{t^{\pol\prime}}$ can be read as: Given the mangle-map $\text{M}$ then the term $t^{\pol}$ reduces to the term $t^{\prime\pol}$.
 
 \begin{prooftree}
   \AxiomC{$
@@ -68,35 +68,6 @@ The judgement $\mangletm{\text{M}}{t^{\pol}}{t^{\pol\prime}}$ can be read like: 
 
 \begin{prooftree}
   \AxiomC{$
-    \mathcal{C}
-    \notin
-    \text{dom}(\text{M})
-  $}
-  \RightLabel{\textsc{M-Tm-Ctor}}
-  \UnaryInfC{$
-    \mangletm{\text{M}}{\mathcal{C}}{\mathcal{C}}
-  $}
-\end{prooftree}
-\vspace*{0.3cm}
-
-\begin{prooftree}
-  \AxiomC{$
-    \mathcal{M}^{i}
-    \notin
-    \text{dom}(\text{M})
-  $}
-  \AxiomC{$
-    \mangletm{\text{M}}{\mathcal{M}}{\mathcal{M}^{\prime}}
-  $}
-  \RightLabel{\textsc{M-Tm-$\mu$-Param}}
-  \BinaryInfC{$
-    \mangletm{\text{M}}{\mathcal{M}^{i}}{\mathcal{M}^{\prime i}}
-  $}
-\end{prooftree}
-\vspace*{0.3cm}
-
-\begin{prooftree}
-  \AxiomC{$
     \mathcal{C}\text{-}\mathcal{D}_{i}
     \notin
     \text{dom}(\text{M})
@@ -110,6 +81,48 @@ The judgement $\mangletm{\text{M}}{t^{\pol}}{t^{\pol\prime}}$ can be read like: 
       {\text{M}}
       {\mathcal{C}\text{-}\mathcal{D}_{i}}
       {\mathcal{C}^{\prime}\text{-}\mathcal{D}_{i}}
+  $}
+\end{prooftree}
+\vspace*{0.3cm}
+
+\begin{prooftree}
+  \AxiomC{$
+    \mathcal{C}
+    \notin
+    \text{dom}(\text{M})
+  $}
+  \RightLabel{\textsc{M-Tm-Ctor}}
+  \UnaryInfC{$
+    \mangletm{\text{M}}{\mathcal{C}}{\mathcal{C}}
+  $}
+\end{prooftree}
+\vspace*{0.3cm}
+
+\begin{prooftree}
+  \AxiomC{$
+    \mathcal{M}^{p}
+    \notin
+    \text{dom}(\text{M})
+  $}
+  \AxiomC{$
+    \mangletm{\text{M}}{\mathcal{M}}{\mathcal{M}^{\prime}}
+  $}
+  \RightLabel{\textsc{M-Tm-$\mu$-Param}}
+  \BinaryInfC{$
+    \mangletm{\text{M}}{\mathcal{M}^{p}}{\mathcal{M}^{\prime p}}
+  $}
+\end{prooftree}
+\vspace*{0.3cm}
+
+\begin{prooftree}
+  \AxiomC{$
+    \mathcal{M}
+    \notin
+    \text{dom}(\text{M})
+  $}
+  \RightLabel{\textsc{M-Tm-$\mu$Abs}}
+  \UnaryInfC{$
+    \mangletm{\text{M}}{\mathcal{M}}{\mathcal{M}}
   $}
 \end{prooftree}
 \vspace*{0.3cm}
@@ -132,19 +145,6 @@ The judgement $\mangletm{\text{M}}{t^{\pol}}{t^{\pol\prime}}$ can be read like: 
       {\text{M}}
       {\mathcal{D}\ \overline{t^{\polprd}}\ \overline{t^{\polcon}}}
       {\mathcal{D}\ \overline{t^{\prime\polprd}}\ \overline{t^{\prime\polcon}}}
-  $}
-\end{prooftree}
-\vspace*{0.3cm}
-
-\begin{prooftree}
-  \AxiomC{$
-    \mathcal{M}
-    \notin
-    \text{dom}(\text{M})
-  $}
-  \RightLabel{\textsc{M-Tm-$\mu$Abs}}
-  \UnaryInfC{$
-    \mangletm{\text{M}}{\mathcal{M}}{\mathcal{M}}
   $}
 \end{prooftree}
 \vspace*{0.3cm}
